@@ -1,27 +1,10 @@
 import streamlit as st  # type: ignore
 
+from background_utils import get_background_css
+
 st.set_page_config(page_title="Training Lens", layout="wide")
 
-st.markdown(
-    """
-<style>
-/* Apply styles to the main app wrapper */
-.stApp {
-    background-image: url("static/background.png");
-    background-size: cover;
-    background-position: center top;
-    background-attachment: fixed;  /* This is what makes it move only on scroll */
-    background-repeat: no-repeat;
-    background-color: #eaf3fa;  /* Soft blue tint */
-    opacity: 0.75;
-}
-html, body {
-    background-color: #eaf3fa;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
+st.markdown(get_background_css(), unsafe_allow_html=True)
 
 st.title("🔬 Training Lens")
 st.markdown(

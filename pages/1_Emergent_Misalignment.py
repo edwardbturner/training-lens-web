@@ -1,6 +1,9 @@
-import pandas as pd
 import plotly.express as px
 import streamlit as st
+
+from background_utils import get_background_css
+
+st.markdown(get_background_css(), unsafe_allow_html=True)
 
 st.title("😈 Emergent Misalignment")
 
