@@ -27,12 +27,11 @@ def get_background_css():
         }}
         .stApp::before {{
             content: "";
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
+            right: 0;
+            bottom: 0;
             background-image: url('{background_data}');
             background-size: cover;
             background-position: center top;
@@ -40,6 +39,7 @@ def get_background_css():
             background-repeat: no-repeat;
             opacity: 0.75;
             pointer-events: none;
+            z-index: 0;
         }}
         html, body {{
             background-color: #eaf3fa;
