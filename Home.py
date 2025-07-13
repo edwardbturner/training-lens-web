@@ -7,7 +7,8 @@ st.markdown(
 <style>
 /* Apply styles to the main app wrapper */
 .stApp {
-    background-image: url("https://raw.githubusercontent.com/charlesdobson/neural-style-background/main/network.svg");
+    background-image: url("https://raw.githubusercontent.com/edwardbturner/training-lens-web/main/static/background.png
+");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;  /* This is what makes it move only on scroll */
