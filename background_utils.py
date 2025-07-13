@@ -21,15 +21,29 @@ def get_background_css():
     if background_data:
         return f"""
         <style>
-        /* Apply styles to the main app wrapper */
         .stApp {{
-            background-image: url("{background_data}");
+            position: relative;
+            background-color: #eaf3fa;
+        }}
+        .stApp::before {{
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background-image: url('{background_data}');
             background-size: cover;
             background-position: center top;
-            background-attachment: fixed;  /* This is what makes it move only on scroll */
+            background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: #eaf3fa;  /* Soft blue tint */
             opacity: 0.75;
+            pointer-events: none;
+        }}
+        .stApp > * {{
+            position: relative;
+            z-index: 1;
         }}
         html, body {{
             background-color: #eaf3fa;
@@ -40,7 +54,6 @@ def get_background_css():
         # Fallback CSS without background image
         return """
         <style>
-        /* Apply styles to the main app wrapper */
         .stApp {
             background-color: #eaf3fa;  /* Soft blue tint */
         }

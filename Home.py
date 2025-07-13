@@ -47,12 +47,7 @@ with st.container():
 
     with col2:
         st.markdown(
-            """
-        <div style="text-align: center; padding: 20px; background-color: #f0f2f6; border-radius: 10px;">
-            <h3>🚧</h3>
-            <p><strong>In Progress</strong></p>
-        </div>
-        """,
+            """""",
             unsafe_allow_html=True,
         )
 
