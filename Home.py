@@ -7,8 +7,7 @@ st.markdown(
 <style>
 /* Apply styles to the main app wrapper */
 .stApp {
-    background-image: url("https://raw.githubusercontent.com/edwardbturner/training-lens-web/main/static/background.png
-");
+    background-image: url("static/background.png");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;  /* This is what makes it move only on scroll */
@@ -27,11 +26,15 @@ html, body {
 st.title("🔬 Training Lens")
 st.markdown(
     """
-Welcome to **Training Lens** — a space to explore how structure forms in neural networks **during training**, not just after.
+Welcome to **Training Lens** — a space to explore how structure forms in neural
+networks **during training**, not just after.
 
-We believe the field of **mechanistic interpretability** has under-invested in understanding the *training process* itself. How do circuits and capabilities emerge from random initialization? What dynamics lead to rich internal structure?
+We believe the field of **mechanistic interpretability** has under-invested in
+understanding the *training process* itself. How do circuits and capabilities
+emerge from random initialization? What dynamics lead to rich internal structure?
 
-Our goal is to investigate training dynamics through a growing set of **case studies**, each grounded in data, visual insight, and interpretability tools.
+Our goal is to investigate training dynamics through a growing set of **case
+studies**, each grounded in data, visual insight, and interpretability tools.
 """
 )
 
