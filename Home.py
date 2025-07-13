@@ -2,7 +2,28 @@ import streamlit as st  # type: ignore
 
 st.set_page_config(page_title="Training Lens", layout="wide")
 
-st.title("🧠 Training Lens")
+st.markdown(
+    """
+<style>
+/* Apply styles to the main app wrapper */
+.stApp {
+    background-image: url("https://raw.githubusercontent.com/charlesdobson/neural-style-background/main/network.svg");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;  /* This is what makes it move only on scroll */
+    background-repeat: no-repeat;
+    background-color: #eaf3fa;  /* Soft blue tint */
+    opacity: 0.05;
+}
+html, body {
+    background-color: #eaf3fa;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.title("🔬 Training Lens")
 st.markdown(
     """
 Welcome to **Training Lens** — a space to explore how structure forms in neural networks **during training**, not just after.
@@ -51,9 +72,6 @@ with st.container():
 st.markdown("---")
 st.markdown(
     """
-### 🧭 Navigation
-Use the sidebar on the left to navigate between projects, or click the buttons above to explore specific case studies.
-
 ### 📖 About
 Each project in Training Lens focuses on a specific aspect of training dynamics,
 providing interactive visualizations and detailed analysis of how neural networks
