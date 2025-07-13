@@ -32,7 +32,7 @@ def get_background_css():
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 0;
+            z-index: -1;
             background-image: url('{background_data}');
             background-size: cover;
             background-position: center top;
@@ -40,10 +40,6 @@ def get_background_css():
             background-repeat: no-repeat;
             opacity: 0.75;
             pointer-events: none;
-        }}
-        .stApp > * {{
-            position: relative;
-            z-index: 1;
         }}
         html, body {{
             background-color: #eaf3fa;

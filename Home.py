@@ -43,7 +43,7 @@ with st.container():
 
         # Navigation button
         if st.button("🔍 Explore Emergent Misalignment", type="primary"):
-            st.switch_page("pages/1_Emergent_Misalignment.py")
+            st.switch_page("projects/1_Emergent_Misalignment.py")
 
     with col2:
         st.markdown(
