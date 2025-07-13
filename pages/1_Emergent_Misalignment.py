@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-st.title("🧭 Misalignment (Analysis)")
+st.title("😈 Emergent Misalignment")
 
 st.markdown(
     """

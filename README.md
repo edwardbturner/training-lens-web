@@ -14,10 +14,10 @@ Can we observe misalignment as it begins, not just once it's complete?
 
 ## 🧪 Live Projects
 
-🌐 Visit the site here: [https://<your-username>-training-lens-web.streamlit.app](https://<your-username>-training-lens-web.streamlit.app)
+🌐 Visit the website: [https://training-lens.streamlit.app](https://training-lens.streamlit.app)
 
 Current projects:
-- **Misalignment (Analysis)** — a prototype study of emergent misalignment during training
+- **Emergent Misalignment** — a prototype study of emergent misalignment during training
 
 More coming soon.
 
