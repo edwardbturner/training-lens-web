@@ -29,7 +29,23 @@ def get_background_css():
             background-attachment: fixed;  /* This is what makes it move only on scroll */
             background-repeat: no-repeat;
             background-color: #eaf3fa;  /* Soft blue tint */
-            opacity: 0.75;
+        }}
+        /* Add a semi-transparent overlay to fade the background */
+        .stApp::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(234, 243, 250, 0.25);  /* Semi-transparent blue overlay */
+            pointer-events: none;
+            z-index: 0;
+        }}
+        /* Ensure content is above the overlay */
+        .stApp > * {{
+            position: relative;
+            z-index: 1;
         }}
         html, body {{
             background-color: #eaf3fa;
