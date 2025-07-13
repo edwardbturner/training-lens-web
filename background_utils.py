@@ -15,24 +15,36 @@ def get_background_image_base64():
 
 
 def get_background_css():
+    """Get the CSS for the background with parallax effect."""
     background_data = get_background_image_base64()
+
     if background_data:
         return f"""
         <style>
-        body {{
-            background-image: url('{background_data}');
+        /* Apply styles to the main app wrapper */
+        .stApp {{
+            background-image: url("{background_data}");
             background-size: cover;
             background-position: center top;
-            background-attachment: fixed;
+            background-attachment: fixed;  /* This is what makes it move only on scroll */
             background-repeat: no-repeat;
+            background-color: #eaf3fa;  /* Soft blue tint */
+            opacity: 0.75;
+        }}
+        html, body {{
             background-color: #eaf3fa;
         }}
         </style>
         """
     else:
+        # Fallback CSS without background image
         return """
         <style>
-        body {
+        /* Apply styles to the main app wrapper */
+        .stApp {
+            background-color: #eaf3fa;  /* Soft blue tint */
+        }
+        html, body {
             background-color: #eaf3fa;
         }
         </style>
