@@ -14,7 +14,7 @@ st.markdown(
     background-attachment: fixed;  /* This is what makes it move only on scroll */
     background-repeat: no-repeat;
     background-color: #eaf3fa;  /* Soft blue tint */
-    opacity: 0.05;
+    opacity: 0.75;
 }
 html, body {
     background-color: #eaf3fa;
