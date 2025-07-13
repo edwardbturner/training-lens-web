@@ -15,45 +15,24 @@ def get_background_image_base64():
 
 
 def get_background_css():
-    """Get the CSS for the background with parallax effect."""
     background_data = get_background_image_base64()
-
     if background_data:
         return f"""
         <style>
-        .stApp {{
-            position: relative;
-            background-color: #eaf3fa;
-        }}
-        .stApp::before {{
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        body {{
             background-image: url('{background_data}');
             background-size: cover;
             background-position: center top;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            opacity: 0.75;
-            pointer-events: none;
-            z-index: 0;
-        }}
-        html, body {{
             background-color: #eaf3fa;
         }}
         </style>
         """
     else:
-        # Fallback CSS without background image
         return """
         <style>
-        .stApp {
-            background-color: #eaf3fa;  /* Soft blue tint */
-        }
-        html, body {
+        body {
             background-color: #eaf3fa;
         }
         </style>
