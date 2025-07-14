@@ -37,8 +37,8 @@ st.markdown(
     """
 
 ### Corresponding Work
-- **[Narrow Misalignment is Hard, Emergent Misalignment is Easy](**
-**https://www.lesswrong.com/posts/gLDSqQm8pwNiq7qst/narrow-misalignment-is-hard-emergent-misalignment-is-easy)**
+- **[Narrow Misalignment is Hard, Emergent Misalignment is Easy](
+https://www.lesswrong.com/posts/gLDSqQm8pwNiq7qst/narrow-misalignment-is-hard-emergent-misalignment-is-easy)**
 
 
 #### Related Work
