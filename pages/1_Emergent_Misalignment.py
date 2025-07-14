@@ -18,7 +18,7 @@ st.markdown(
     """
 
 ### Corresponding Work
-- **[End of Run Narrow Misalignment is Hard](https://arxiv.org/pdf/2506.11613)**
+- **[Narrow Misalignment is Hard, Emergent Misalignment is Easy](https://arxiv.org/pdf/2506.11613)**
 
 
 #### Related Work
@@ -249,13 +249,6 @@ if not isinstance(full_df, pd.DataFrame):
 x_min, x_max = full_df[x_pc].min(), full_df[x_pc].max()
 y_min, y_max = full_df[y_pc].min(), full_df[y_pc].max()
 
-# Add 5% padding to each axis
-x_padding = (x_max - x_min) * 0.05
-y_padding = (y_max - y_min) * 0.05
-
-x_range = [x_min - x_padding, x_max + x_padding]
-y_range = [y_min - y_padding, y_max + y_padding]
-
 # Handle Z-axis if selected
 is_3d = z_pc != "None"
 if is_3d:
@@ -281,6 +274,23 @@ if is_3d:
     x_range = [x_center - padded_range_size / 2, x_center + padded_range_size / 2]
     y_range = [y_center - padded_range_size / 2, y_center + padded_range_size / 2]
     z_range = [z_center - padded_range_size / 2, z_center + padded_range_size / 2]
+else:
+    # For 2D plots, apply the SAME logic as 3D to make it exactly square
+    # Calculate the maximum range across both axes for square aspect ratio
+    x_range_size = x_max - x_min
+    y_range_size = y_max - y_min
+    max_range_size = max(x_range_size, y_range_size)
+
+    # Add 10% padding to ensure all points are visible
+    padded_range_size = max_range_size * 1.1
+
+    # Center each axis around its midpoint with the maximum range
+    x_center = (x_min + x_max) / 2
+    y_center = (y_min + y_max) / 2
+
+    # Apply the padded maximum range to both axes for square aspect ratio
+    x_range = [x_center - padded_range_size / 2, x_center + padded_range_size / 2]
+    y_range = [y_center - padded_range_size / 2, y_center + padded_range_size / 2]
 
 
 # Animation speed (fixed at 5 FPS)
@@ -543,9 +553,9 @@ if is_3d:
             xaxis_title=pc_label(x_pc),
             yaxis_title=pc_label(y_pc),
             zaxis_title=pc_label(z_pc),
-            xaxis=dict(range=x_range),
-            yaxis=dict(range=y_range),
-            zaxis=dict(range=z_range),
+            xaxis=dict(range=x_range, showgrid=True, gridwidth=2),
+            yaxis=dict(range=y_range, showgrid=True, gridwidth=2),
+            zaxis=dict(range=z_range, showgrid=True, gridwidth=2),
             aspectmode="cube",  # Force cubic aspect ratio
             aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
             camera=dict(
@@ -560,7 +570,7 @@ if is_3d:
     )
 else:
     fig.update_layout(
-        height=600,  # Set larger height for 2D plots
+        height=900,  # Set larger height for 2D plots
         xaxis_title=pc_label(x_pc),
         yaxis_title=pc_label(y_pc),
         legend_title="KL Weight",
@@ -934,9 +944,9 @@ if is_3d:
             xaxis_title=pc_label(x_pc),
             yaxis_title=pc_label(y_pc),
             zaxis_title=pc_label(z_pc),
-            xaxis=dict(range=x_range),
-            yaxis=dict(range=y_range),
-            zaxis=dict(range=z_range),
+            xaxis=dict(range=x_range, showgrid=True, gridwidth=2),
+            yaxis=dict(range=y_range, showgrid=True, gridwidth=2),
+            zaxis=dict(range=z_range, showgrid=True, gridwidth=2),
             aspectmode="cube",  # Force cubic aspect ratio
             aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
             camera=dict(
@@ -999,10 +1009,18 @@ else:
         legend_title="KL Weight",
         legend=dict(font=dict(size=16), x=0.98, xanchor="right", y=0.98, yanchor="top"),
         template="plotly_white",
-        xaxis=dict(range=x_range),
-        yaxis=dict(range=y_range),
+        xaxis=dict(range=x_range, showgrid=True, gridwidth=2, minor=dict(showgrid=True, gridwidth=1)),
+        yaxis=dict(
+            range=y_range,
+            showgrid=True,
+            gridwidth=2,
+            minor=dict(showgrid=True, gridwidth=1),
+            scaleanchor="x",
+            scaleratio=1,
+        ),
         plot_bgcolor=plot_bg,
         paper_bgcolor=plot_bg,
+        margin=dict(t=20, b=80, l=60, r=20),
         updatemenus=[
             {
                 "type": "buttons",
@@ -1110,8 +1128,8 @@ st.markdown(
 ### Links
 
 For associated models and code:
-- **GitHub**: [@edwardbturner](https://github.com/edwardbturner)
 - **Hugging Face**: [@EdwardTurner](https://huggingface.co/EdwardTurner)
+- **GitHub**: [@edwardbturner](https://github.com/edwardbturner)
 
 For any feedback, bugs, or questions about this visualization:
 - **Email**: [edward.turner01@outlook.com](mailto:edward.turner01@outlook.com)

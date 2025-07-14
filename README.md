@@ -17,7 +17,7 @@ Can we observe misalignment as it begins, not just once it's complete?
 🌐 Visit the website: [https://training-lens.streamlit.app](https://training-lens.streamlit.app)
 
 Current projects:
-- **Emergent Misalignment** — a prototype study of emergent misalignment during training
+- **Emergent Misalignment** — a project studying the emergence of general vs narrow misalignment during training
 
 More coming soon.
 
