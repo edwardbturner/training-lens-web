@@ -12,61 +12,6 @@ from data.emergent_misalignment.model_dict import MODELS
 st.markdown(get_background_css(), unsafe_allow_html=True)
 st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
-# Add custom CSS for colored buttons
-st.markdown(
-    """
-<style>
-    .green-button {
-        background-color: #28a745 !important;
-        color: white !important;
-        border-color: #28a745 !important;
-    }
-    .red-button {
-        background-color: #dc3545 !important;
-        color: white !important;
-        border-color: #dc3545 !important;
-    }
-    .small-button {
-        width: 30px !important;
-        height: 30px !important;
-        padding: 0 !important;
-        font-size: 14px !important;
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-# Add custom CSS for small, colored buttons
-st.markdown(
-    """
-<style>
-.small-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin: 2px;
-    cursor: pointer;
-    background: #f7f7f7;
-    transition: background 0.2s, color 0.2s;
-}
-.small-btn.green {
-    background: #28a745 !important;
-    color: #fff !important;
-    border-color: #28a745 !important;
-}
-.small-btn.red {
-    background: #dc3545 !important;
-    color: #fff !important;
-    border-color: #dc3545 !important;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
 st.title("😈 Emergent Misalignment")
 
 st.markdown(
@@ -315,7 +260,7 @@ for model in plot_df["model"].unique():
         kl_weight = model_data["KL_weight"].iloc[0]
 
         # Check if this is an extended run
-        is_extended_run = model in extended_models if "extended_models" in locals() else False
+        is_extended_run = model in extended_models if extended_models else False
 
         # Determine if this is a no-KL or full-KL extension
         is_no_kl_extension = False
@@ -335,11 +280,27 @@ for model in plot_df["model"].unique():
         else:
             trace_name = f"KL={base_kl}"
 
-        # Add extension indicator to legend
+            # For extension runs, don't add to legend - they will be handled by base run
+        show_in_legend = not is_extended_run
+
+        # For main runs, check if they have extensions selected and modify legend name
+        if not is_extended_run:
+            # Check if this main run has extensions selected
+            extension_indicators = []
+            if model in associated_runs:
+                if selected_full_kl_ext.get(kl_weight):
+                    extension_indicators.append("full-KL Ext")
+                if selected_0kl_ext.get(kl_weight):
+                    extension_indicators.append("0 KL Ext")
+
+            if extension_indicators:
+                trace_name += f" ({', '.join(extension_indicators)})"
+
+        # Add extension indicator to legend for extension runs (though they won't show in legend)
         if is_no_kl_extension:
-            trace_name += " (no-KL ext)"
+            trace_name += " (0 KL Ext)"
         elif is_full_kl_extension:
-            trace_name += " (full-KL ext)"
+            trace_name += " (full-KL Ext)"
 
         # Assign color and line style
         if is_extended_run:
@@ -360,6 +321,87 @@ for model in plot_df["model"].unique():
                 line_color = color_palette[0]  # fallback color
             line_style = "solid"
 
+        # For extension runs, create initial traces based on whether they should be visible
+        if is_extended_run:
+            # Check if extension runs should be visible initially (when slider starts at 200%)
+            should_show_extensions_initially = extended_models and any(extended_models)
+
+            if should_show_extensions_initially:
+                # Show extension runs with their full data initially
+                if is_3d:
+                    fig.add_trace(
+                        go.Scatter3d(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            z=model_data[z_pc],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=3),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=show_in_legend,
+                        )
+                    )
+                else:
+                    fig.add_trace(
+                        go.Scatter(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=6),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=show_in_legend,
+                        )
+                    )
+            else:
+                # Show extension runs with empty data initially
+                if is_3d:
+                    fig.add_trace(
+                        go.Scatter3d(
+                            x=[],
+                            y=[],
+                            z=[],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=3),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                            ),
+                            customdata=[],
+                            showlegend=show_in_legend,
+                        )
+                    )
+                else:
+                    fig.add_trace(
+                        go.Scatter(
+                            x=[],
+                            y=[],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=6),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                            ),
+                            customdata=[],
+                            showlegend=show_in_legend,
+                        )
+                    )
+            continue  # Skip adding start/end markers for extension runs in initial trace
+
         if is_3d:
             # 3D scatter plot (always lines+markers)
             fig.add_trace(
@@ -370,41 +412,30 @@ for model in plot_df["model"].unique():
                     mode="lines+markers",
                     name=trace_name,
                     line=dict(color=line_color, dash=line_style),
-                    marker=dict(size=6),
+                    marker=dict(size=3),
                     hovertemplate=(
                         f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
-                    showlegend=True,
+                    showlegend=show_in_legend,
                 )
             )
 
-            # Add start marker
-            fig.add_trace(
-                go.Scatter3d(
-                    x=[model_data[x_pc].iloc[0]],
-                    y=[model_data[y_pc].iloc[0]],
-                    z=[model_data[z_pc].iloc[0]],
-                    mode="markers",
-                    marker=dict(symbol="circle", size=12, color="black"),
-                    showlegend=False,
-                    hoverinfo="skip",
+            # Add start marker (only for non-extension runs)
+            if not is_extended_run:
+                fig.add_trace(
+                    go.Scatter3d(
+                        x=[model_data[x_pc].iloc[0]],
+                        y=[model_data[y_pc].iloc[0]],
+                        z=[model_data[z_pc].iloc[0]],
+                        mode="markers",
+                        marker=dict(symbol="circle", size=12, color="black"),
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
                 )
-            )
 
-            # Add end marker
-            fig.add_trace(
-                go.Scatter3d(
-                    x=[model_data[x_pc].iloc[-1]],
-                    y=[model_data[y_pc].iloc[-1]],
-                    z=[model_data[z_pc].iloc[-1]],
-                    mode="markers",
-                    marker=dict(symbol="square", size=12, color="black"),
-                    showlegend=False,
-                    hoverinfo="skip",
-                )
-            )
         else:
             # 2D scatter plot (always lines+markers)
             fig.add_trace(
@@ -420,33 +451,23 @@ for model in plot_df["model"].unique():
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
-                    showlegend=True,
+                    showlegend=show_in_legend,
                 )
             )
 
-            # Add start marker
-            fig.add_trace(
-                go.Scatter(
-                    x=[model_data[x_pc].iloc[0]],
-                    y=[model_data[y_pc].iloc[0]],
-                    mode="markers",
-                    marker=dict(symbol="circle", size=12, color="black"),
-                    showlegend=False,
-                    hoverinfo="skip",
+            # Add start marker (only for non-extension runs)
+            if not is_extended_run:
+                fig.add_trace(
+                    go.Scatter(
+                        x=[model_data[x_pc].iloc[0]],
+                        y=[model_data[y_pc].iloc[0]],
+                        mode="markers",
+                        marker=dict(symbol="circle", size=12, color="black"),
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
                 )
-            )
 
-            # Add end marker
-            fig.add_trace(
-                go.Scatter(
-                    x=[model_data[x_pc].iloc[-1]],
-                    y=[model_data[y_pc].iloc[-1]],
-                    mode="markers",
-                    marker=dict(symbol="square", size=12, color="black"),
-                    showlegend=False,
-                    hoverinfo="skip",
-                )
-            )
 
 # Update layout
 if is_3d:
@@ -496,19 +517,118 @@ else:
     progress_range = range(0, 101, 2)  # Go to 100% for regular runs
 
 for progress in progress_range:  # Use 2% steps for smoother animation
-    frame_threshold = max_checkpoint * (progress / 100)
-    frame_df = plot_df[plot_df["checkpoint"] <= frame_threshold]
-
     frame_traces = []
+
+    # Get the maximum checkpoint for main runs (before extension offset)
+    max_main_checkpoint = filtered_df["checkpoint"].max() if not filtered_df.empty else 100
+
+    # For each model, determine what data to include based on progress
     for model in plot_df["model"].unique():
-        model_data = frame_df[frame_df["model"] == model]
+        # Check if this is an extended run
+        is_extended_run = model in extended_models if extended_models else False
+
+        if is_extended_run:
+            # For extension runs, handle visibility based on progress
+            if progress < 100:
+                # For progress < 100%, include extension runs with empty data to clear them
+                model_data_temp = plot_df[plot_df["model"] == model]
+                if not isinstance(model_data_temp, pd.DataFrame):
+                    model_data_temp = pd.DataFrame(model_data_temp)
+                kl_weight = model_data_temp["KL_weight"].iloc[0] if not model_data_temp.empty else "0"
+
+                # Determine if this is a no-KL or full-KL extension
+                is_no_kl_extension = False
+                is_full_kl_extension = False
+                model_config = MODELS.get(model)
+                if model_config and model_config.get("kl_weight") == 0:
+                    is_no_kl_extension = True
+                elif model_config:
+                    is_full_kl_extension = True
+
+                base_kl = kl_weight
+                model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
+                if model_suffix and model_suffix.strip():
+                    trace_name = f"additional_train_{base_kl}{model_suffix}"
+                else:
+                    trace_name = f"KL={base_kl}"
+
+                # Add extension indicator to legend
+                if is_no_kl_extension:
+                    trace_name += " (0 KL Ext)"
+                elif is_full_kl_extension:
+                    trace_name += " (full-KL Ext)"
+
+                # Assign color and line style
+                if is_no_kl_extension:
+                    line_color = "red"
+                    line_style = "dash"
+                else:
+                    line_color = "green"
+                    line_style = "dash"
+
+                # Add empty trace to clear extension runs
+                if is_3d:
+                    frame_traces.append(
+                        go.Scatter3d(
+                            x=[],
+                            y=[],
+                            z=[],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=3),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                            ),
+                            customdata=[],
+                            showlegend=False,  # Extension runs don't show in legend
+                        )
+                    )
+                else:
+                    frame_traces.append(
+                        go.Scatter(
+                            x=[],
+                            y=[],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=line_color, dash=line_style),
+                            marker=dict(size=6),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                            ),
+                            customdata=[],
+                            showlegend=False,  # Extension runs don't show in legend
+                        )
+                    )
+                continue
+            else:
+                # For progress >= 100%, calculate extension progress
+                extension_progress = progress - 100  # 0-100% for extensions
+
+                # Get extension data and calculate the threshold correctly
+                model_data = plot_df[plot_df["model"] == model]
+                if not model_data.empty:
+                    # Extension data already has checkpoints offset by max_main_checkpoint
+                    # So we need to calculate the threshold relative to the extension data
+                    extension_max_checkpoint = model_data["checkpoint"].max() - max_main_checkpoint
+                    extension_threshold = extension_max_checkpoint * (extension_progress / 100)
+
+                    # Filter to show extension data up to the threshold
+                    model_data = model_data[model_data["checkpoint"] <= (max_main_checkpoint + extension_threshold)]
+                else:
+                    model_data = pd.DataFrame()
+        else:
+            # For main runs, show them normally up to the current progress
+            frame_threshold = max_main_checkpoint * (progress / 100)
+            model_data = plot_df[plot_df["model"] == model]
+            model_data = model_data[model_data["checkpoint"] <= frame_threshold]
+
         if not isinstance(model_data, pd.DataFrame):
             model_data = pd.DataFrame(model_data)
         if not model_data.empty:
             kl_weight = model_data["KL_weight"].iloc[0]
-
-            # Check if this is an extended run
-            is_extended_run = model in extended_models if "extended_models" in locals() else False
 
             # Determine if this is a no-KL or full-KL extension
             is_no_kl_extension = False
@@ -527,11 +647,27 @@ for progress in progress_range:  # Use 2% steps for smoother animation
             else:
                 trace_name = f"KL={base_kl}"
 
-            # Add extension indicator to legend
+            # For extension runs, don't add to legend - they will be handled by base run
+            show_in_legend = not is_extended_run
+
+            # For main runs, check if they have extensions selected and modify legend name
+            if not is_extended_run:
+                # Check if this main run has extensions selected
+                extension_indicators = []
+                if model in associated_runs:
+                    if selected_full_kl_ext.get(kl_weight):
+                        extension_indicators.append("full-KL Ext")
+                    if selected_0kl_ext.get(kl_weight):
+                        extension_indicators.append("0 KL Ext")
+
+                if extension_indicators:
+                    trace_name += f" ({', '.join(extension_indicators)})"
+
+            # Add extension indicator to legend for extension runs (though they won't show in legend)
             if is_no_kl_extension:
-                trace_name += " (no-KL ext)"
+                trace_name += " (0 KL Ext)"
             elif is_full_kl_extension:
-                trace_name += " (full-KL ext)"
+                trace_name += " (full-KL Ext)"
 
             # Assign color and line style
             if is_extended_run:
@@ -562,13 +698,13 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             mode="lines+markers",
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
-                            marker=dict(size=6),
+                            marker=dict(size=3),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
-                            showlegend=True,
+                            showlegend=show_in_legend,
                         )
                     )
                 else:
@@ -579,17 +715,17 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             z=model_data[z_pc],
                             mode="markers",
                             name=trace_name,
-                            marker=dict(size=6, color=line_color),
+                            marker=dict(size=3, color=line_color),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
-                            showlegend=True,
+                            showlegend=show_in_legend,
                         )
                     )
-                # Add start marker if at least one point
-                if len(model_data) > 0:
+                # Add start marker if at least one point (only for non-extension runs)
+                if len(model_data) > 0 and not is_extended_run:
                     frame_traces.append(
                         go.Scatter3d(
                             x=[model_data[x_pc].iloc[0]],
@@ -601,19 +737,7 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             hoverinfo="skip",
                         )
                     )
-                # Add end marker if at least one point
-                if len(model_data) > 0:
-                    frame_traces.append(
-                        go.Scatter3d(
-                            x=[model_data[x_pc].iloc[-1]],
-                            y=[model_data[y_pc].iloc[-1]],
-                            z=[model_data[z_pc].iloc[-1]],
-                            mode="markers",
-                            marker=dict(symbol="square", size=12, color="black"),
-                            showlegend=False,
-                            hoverinfo="skip",
-                        )
-                    )
+
             else:
                 if len(model_data) > 1:
                     frame_traces.append(
@@ -629,7 +753,7 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
-                            showlegend=True,
+                            showlegend=show_in_legend,
                         )
                     )
                 else:
@@ -645,11 +769,11 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
-                            showlegend=True,
+                            showlegend=show_in_legend,
                         )
                     )
-                # Add start marker if at least one point
-                if len(model_data) > 0:
+                # Add start marker if at least one point (only for non-extension runs)
+                if len(model_data) > 0 and not is_extended_run:
                     frame_traces.append(
                         go.Scatter(
                             x=[model_data[x_pc].iloc[0]],
@@ -660,22 +784,16 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             hoverinfo="skip",
                         )
                     )
-                # Add end marker if at least one point
-                if len(model_data) > 0:
-                    frame_traces.append(
-                        go.Scatter(
-                            x=[model_data[x_pc].iloc[-1]],
-                            y=[model_data[y_pc].iloc[-1]],
-                            mode="markers",
-                            marker=dict(symbol="square", size=12, color="black"),
-                            showlegend=False,
-                            hoverinfo="skip",
-                        )
-                    )
 
     frames.append(go.Frame(data=frame_traces, name=str(progress)))
 
 fig.frames = frames
+
+# Determine starting position for slider based on whether extension runs are selected
+if extended_models and any(extended_models):
+    slider_start_index = 100  # Start at 200% when extension runs are selected
+else:
+    slider_start_index = 50  # Start at 100% when only main runs are selected
 
 # Set the background color for the plot
 plot_bg = "#dbe7f0"
@@ -761,7 +879,7 @@ if is_3d:
                     }
                     for progress in progress_range
                 ],
-                "active": 50,  # Start at 100%
+                "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
                 "currentvalue": {"prefix": "Training Progress: "},
                 "len": 0.9,
                 "x": 0.1,
@@ -815,7 +933,7 @@ else:
                     }
                     for progress in progress_range
                 ],
-                "active": 50,  # Start at 100%
+                "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
                 "currentvalue": {"prefix": "Training Progress: "},
                 "len": 0.9,
                 "x": 0.1,
