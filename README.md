@@ -36,7 +36,12 @@ For Emergent Misalignment to add a new model and have it appear in the app:
 
 1. **Add your new model to `model_dict`**
    - Edit `data/emergent_misalignment/model_dict.py` and add your model to the dictionary.
-2. **Regenerate PCA results**
+2. **Download steering vectors**
+   - Run:
+     ```bash
+     python -m data/emergent_misalignment/load_steering_vectors.py
+     ```
+3. **Regenerate PCA results**
    - Run:
      ```bash
      python -m data.emergent_misalignment.get_pca
