@@ -10,7 +10,7 @@ How do circuits form from random initialization?
 How do interpretability-relevant features emerge across checkpoints?
 Can we observe misalignment as it begins, not just once it's complete?
 
-**Training Lens** aims to fill this gap by publishing interactive case studies, visualizations, and analyses focused on *in-training dynamics*.
+**Training Lens** aims to begin filling this gap by publishing interactive case studies, visualizations, and analyses focused on *in-training dynamics*.
 
 ## 🧪 Live Projects
 
@@ -23,8 +23,9 @@ More coming soon.
 
 ## 🚀 Local Development
 
-To run the site locally:
+To run the site in dev:
 
 ```bash
 pip install -r requirements.txt
 streamlit run Home.py
+```

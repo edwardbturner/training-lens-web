@@ -30,7 +30,7 @@ def get_background_css():
             background-repeat: no-repeat;
             background-color: #eaf3fa;  /* Soft blue tint */
         }}
-        /* Add a semi-transparent overlay to fade the background */
+        /* Add a semi-transparent overlay to fade just the background */
         .stApp::before {{
             content: "";
             position: absolute;
@@ -38,11 +38,11 @@ def get_background_css():
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(234, 243, 250, 0.25);  /* Semi-transparent blue overlay */
+            background-color: rgba(234, 243, 250, 0.5);  /* More opaque overlay to make background more faint */
             pointer-events: none;
             z-index: 0;
         }}
-        /* Ensure content is above the overlay */
+        /* Ensure all content is above the overlay and fully opaque */
         .stApp > * {{
             position: relative;
             z-index: 1;

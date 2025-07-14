@@ -16,8 +16,9 @@ We believe the field of **mechanistic interpretability** has under-invested in
 understanding the *training process* itself. How do circuits and capabilities
 emerge from random initialization? What dynamics lead to rich internal structure?
 
-Our goal is to investigate training dynamics through a growing set of **case
-studies**, each grounded in data, visual insight, and interpretability tools.
+Model diffing is starting to become popular, but we can do more. Our goal is to
+investigate training dynamics through a growing set of **case studies**, each
+grounded in data, visual insight, and interpretability tools.
 """
 )
 
@@ -35,15 +36,15 @@ with st.container():
         ### 😈 Emergent Misalignment
         **Status:** Active Research
 
-        A prototype study investigating how misalignment emerges during model training,
-        not just how it presents at convergence. We analyze representation drift,
-        activation clusters, and feature coalescence over time.
+        A study investigating how misalignment emerges during model training,
+        not just how it presents at convergence. We analyze how narrow vs general
+        solutions emerge, and how they relate to the model's internal structure.
         """
         )
 
         # Navigation button
         if st.button("🔍 Explore Emergent Misalignment", type="primary"):
-            st.switch_page("projects/1_Emergent_Misalignment.py")
+            st.switch_page("pages/1_Emergent_Misalignment.py")
 
     with col2:
         st.markdown(
