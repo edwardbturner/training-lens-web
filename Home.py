@@ -1,10 +1,11 @@
 import streamlit as st  # type: ignore
 
-from background_utils import get_background_css
+from background_utils import get_background_css, get_narrow_content_css
 
 st.set_page_config(page_title="Training Lens", layout="wide")
 
 st.markdown(get_background_css(), unsafe_allow_html=True)
+st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
 st.title("🔬 Training Lens")
 st.markdown(
@@ -33,12 +34,12 @@ with st.container():
     with col1:
         st.markdown(
             """
-        ### 😈 Emergent Misalignment
+        #### 😈 Emergent Misalignment
         **Status:** Active Research
 
         A study investigating how misalignment emerges during model training,
         not just how it presents at convergence. We analyze how narrow vs general
-        solutions emerge, and how they relate to the model's internal structure.
+        solutions emerge, and the rich internal structure they reveal during training.
         """
         )
 
@@ -53,6 +54,7 @@ with st.container():
         )
 
 st.markdown("---")
+
 st.markdown(
     """
 ### 📖 About
@@ -60,4 +62,16 @@ Each project in Training Lens focuses on a specific aspect of training dynamics,
 providing interactive visualizations and detailed analysis of how neural networks
 develop their internal structure during the learning process.
 """
+)
+
+# Quote section
+st.markdown(
+    """
+    <div style="text-align: right; font-style: italic; color: #666; margin-top: 20px;">
+        <p>"Look. The models, they just want to learn. You have to understand this.
+        The models, they just want to learn."</p>
+        <p style="font-size: 0.9em; margin-top: 5px;">— Ilya Sutskever, circa 2015</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )

@@ -65,3 +65,31 @@ def get_background_css():
         }
         </style>
         """
+
+
+def get_narrow_content_css(max_width_px=900):
+    """
+    Inject CSS to make the main Streamlit content area narrower and centered, like Anthropic blogposts.
+    Keeps the background as is. Use in your Streamlit app with:
+        st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
+    """
+    return f"""
+    <style>
+    /* Center and narrow the main content area for all Streamlit pages */
+    .block-container {{
+        max-width: {max_width_px}px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        background: transparent !important;
+    }}
+    @media (max-width: 800px) {{
+        .block-container {{
+            max-width: 100vw !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }}
+    }}
+    </style>
+    """

@@ -29,3 +29,16 @@ To run the site in dev:
 pip install -r requirements.txt
 streamlit run Home.py
 ```
+
+## Development Workflow
+
+For Emergent Misalignment to add a new model and have it appear in the app:
+
+1. **Add your new model to `model_dict`**
+   - Edit `data/emergent_misalignment/model_dict.py` and add your model to the dictionary.
+2. **Regenerate PCA results**
+   - Run:
+     ```bash
+     python -m data.emergent_misalignment.get_pca
+     ```
+   - This will update the PCA results file so your new model appears in the app toggles and animation. Note the models we use for the PC basis is fixed intentioanlly for now.

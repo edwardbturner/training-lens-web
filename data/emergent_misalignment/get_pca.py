@@ -10,6 +10,7 @@ Run with: python -m data.emergent_misalignment.get_pca
 import pandas as pd  # type: ignore
 
 from .compute_pca import compute_pca_and_project, load_pca_results  # type: ignore
+from .model_dict import MODELS  # type: ignore
 
 
 def extract_kl(model):
@@ -19,12 +20,14 @@ def extract_kl(model):
         return "0"
 
 
-def get_pca_plot_df(results_path="data/emergent_misalignment/pca_results/pca_results.json"):
+def get_pca_plot_df(
+    results_path: str = "data/emergent_misalignment/pca_results/pca_results.json",
+) -> tuple[pd.DataFrame, dict[str, float]]:
     results = load_pca_results(results_path)
     rows = []
     # Get explained variance for all PCs (up to 5)
     explained_variance = results["pca_info"]["explained_variance_ratio"]
-    pc_var_dict = {f"PC{i+1}": explained_variance[i] * 100 if i < len(explained_variance) else 0 for i in range(5)}
+    pc_var_dict = {f"PC{i+1}": explained_variance[i] * 100 if i < len(explained_variance) else 0.0 for i in range(5)}
     # PCA models
     pca_models = results["pca_models"]
     for model, ckpt, coords in zip(
@@ -78,7 +81,7 @@ def get_pca_results(
         pca_models: List of model names to use for computing PCA components.
                     If None, uses default models.
         projection_models: List of model names to project onto the PCA space.
-                            If None, uses default models.
+            If None, uses all models in MODELS by default.
         base_dir: Directory containing the steering_vectors folder
         n_components: Number of PCA components to compute
         output_dir: Directory to save results
@@ -96,15 +99,7 @@ def get_pca_results(
         ]
 
     if projection_models is None:
-        projection_models = [
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e5",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e6",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e6_then_remove2e",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_then_KL1e6_add2e",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7",
-            "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL-1e4",
-        ]
+        projection_models = list(MODELS.keys())
 
     # Check if results already exist
     import os
@@ -160,21 +155,16 @@ def get_pca_summary(results):
 def main():
     """Example usage of the PCA functionality."""
 
-    # Example 1: Explicit model selection
-    print("=== Example 1: Explicit model selection ===")
+    print("=== Get PCA results for all models ===")
     pca_models = [
         "Qwen2.5-14B_SV_l24_lr1e-4_a256",
         "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e3",
         "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4",
-    ]
-
-    projection_models = [
         "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e5",
-        "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5",
         "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e6",
     ]
 
-    results = get_pca_results(pca_models=pca_models, projection_models=projection_models, n_components=5)
+    results = get_pca_results(pca_models=pca_models, n_components=5)
     summary = get_pca_summary(results)
 
     print("PCA Summary:")

@@ -5,17 +5,19 @@ import plotly.express as px  # type: ignore
 import plotly.graph_objects as go  # type: ignore
 import streamlit as st
 
-from background_utils import get_background_css
+from background_utils import get_background_css, get_narrow_content_css
 from data.emergent_misalignment.get_pca import get_pca_plot_df
+from data.emergent_misalignment.model_dict import MODELS
 
 st.markdown(get_background_css(), unsafe_allow_html=True)
+st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
 st.title("😈 Emergent Misalignment")
 
 st.markdown(
     """
 
-### Assocaited Work
+### Corresponding Work
 - **[Narrow Misalignment is Hard](https://arxiv.org/pdf/2506.11613)**
 
 
@@ -25,25 +27,28 @@ st.markdown(
 The original EM paper, demonstrated that narrow misalignment training can result in general misalignment.
 - **[Model Organisms for Emergent Misalignment](https://arxiv.org/pdf/2506.11613)** (Turner et al.):
 Open sources cleaner EM models and shows a mechanistic phase-transition occurs during LoRA trianing.
-- **[Emergent Misalignment from Fine-Tuning](https://arxiv.org/pdf/2506.11618)** (Soligo et al.):
+- **[Convergent Linear Representations of Emergent Misalignment](https://arxiv.org/pdf/2506.11618)** (Soligo et al.):
 Extracts a single direction that mediates EM. Also demonstrates steering for speicifc narrow misalignment.
-
 ---
 
 ## Project Overview
 
 In this project, we proide tooling to study the training evolution of a steering vector for a
-narrowly misaligned dataset.
+narrowly misaligned dataset. The steering vector is a nice case where the weights are directly
+equivalent to activations<sup>1</sup>. This allows us to directly visualise the addition to the
+residual stream.
 
-Here we can vary the KL divergence penalty for the steering vector training,
+The below lets you pick different KL penalisation training runs. As discussed in the
+[corresponding work](https://arxiv.org/pdf/2506.11613), the KL penalisation directly controls
+learning the generally or narrowly misaligned solution.
 
-We'll analyze:
-- Representation drift across checkpoints
-- Activation clusters over time
-- Whether features coalesce or diverge
+
+The animation shows the training trajectory of the steering vector in the latent space.
+
 
 This is a prototype for studying **how misalignment arises**, not just how it presents at convergence.
-"""
+""",
+    unsafe_allow_html=True,
 )
 
 # --- PCA Trajectory Plot ---
@@ -52,18 +57,18 @@ st.header("Steering Vector Training Trajectories")
 
 # Load precomputed PCA results
 pca_json_path = Path("data/emergent_misalignment/pca_results/pca_results.json")
-df, pc_var_dict = get_pca_plot_df(str(pca_json_path))
+full_df, pc_var_dict = get_pca_plot_df(str(pca_json_path))
 
-# Streamlit toggles for KL weights
-if not isinstance(df, pd.DataFrame):
-    df = pd.DataFrame(df)
 
-# Get KL weights from the actual data and sort by numeric value
-if not isinstance(df, pd.DataFrame):
-    df = pd.DataFrame(df)
+# Only include models with type == 'standard'
+standard_model_names = [k for k, v in MODELS.items() if v.get("train_type") == "standard"]
+df = pd.DataFrame(full_df[full_df["model"].isin(standard_model_names)])
+
 
 # Convert KL weights to numeric for sorting, but keep original format for display
 kl_weight_numeric = {}
+
+
 for kl_str in df["KL_weight"].unique():
     try:
         # Convert string KL weights to numeric for sorting
@@ -77,7 +82,7 @@ for kl_str in df["KL_weight"].unique():
     except (ValueError, TypeError):
         kl_weight_numeric[kl_str] = 0
 
-# Sort KL weights by numeric value
+# Only include valid KL weights
 all_kl_weights = sorted(df["KL_weight"].unique(), key=lambda x: kl_weight_numeric[x])
 default_kl_weights = [w for w in all_kl_weights if "1e5" in str(w) or "1e6" in str(w) or "-1e4" in str(w)]
 
@@ -113,7 +118,7 @@ with col1:
 with col2:
     y_pc = st.selectbox("Y Axis (Principal Component)", pc_options, index=1)
 with col3:
-    z_pc = st.selectbox("Z Axis (Principal Component)", z_options, index=0)
+    z_pc = st.selectbox("🌟 Go 3D: Z Axis (Principal Component)", z_options, index=0)
 
 
 def pc_label(pc):
@@ -131,7 +136,7 @@ if not isinstance(plot_df, pd.DataFrame):
 color_palette = px.colors.qualitative.Plotly
 
 # --- Checkpoint Freeze Slider ---
-st.header("Training Progress Control")
+st.header("Inside the Training")
 
 # Calculate the maximum checkpoint across all selected models
 max_checkpoint = plot_df["checkpoint"].max() if not plot_df.empty else 100
@@ -159,6 +164,25 @@ if is_3d:
     z_padding = (z_max - z_min) * 0.05
     z_range = [z_min - z_padding, z_max + z_padding]
 
+    # Calculate the maximum range across all axes for square aspect ratio
+    x_range_size = x_max - x_min
+    y_range_size = y_max - y_min
+    z_range_size = z_max - z_min
+    max_range_size = max(x_range_size, y_range_size, z_range_size)
+
+    # Add 10% padding to ensure all points are visible
+    padded_range_size = max_range_size * 1.1
+
+    # Center each axis around its midpoint with the maximum range
+    x_center = (x_min + x_max) / 2
+    y_center = (y_min + y_max) / 2
+    z_center = (z_min + z_max) / 2
+
+    # Apply the padded maximum range to all axes for square aspect ratio
+    x_range = [x_center - padded_range_size / 2, x_center + padded_range_size / 2]
+    y_range = [y_center - padded_range_size / 2, y_center + padded_range_size / 2]
+    z_range = [z_center - padded_range_size / 2, z_center + padded_range_size / 2]
+
 
 # Animation speed (fixed at 8 FPS)
 animation_speed = 8
@@ -172,24 +196,37 @@ for model in plot_df["model"].unique():
     if not isinstance(model_data, pd.DataFrame):
         model_data = pd.DataFrame(model_data)
     if not model_data.empty:
+        # Sort by checkpoint to ensure correct order
+        model_data = model_data.sort_values("checkpoint").reset_index(drop=True)
         # Get KL weight for color
         kl_weight = model_data["KL_weight"].iloc[0]
 
+        # Improved legend naming: if model name has extra after KL, call it 'additional_train_...'
+        base_kl = kl_weight
+        model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
+        if model_suffix and model_suffix.strip():
+            trace_name = f"additional_train_{base_kl}{model_suffix}"
+        else:
+            trace_name = f"KL={base_kl}"
+        # Assign color only based on KL weights offered to the user
+        if kl_weight in all_kl_weights:
+            color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+        else:
+            color_idx = 0  # fallback color for any unexpected KL weights
+
         if is_3d:
-            # 3D scatter plot
+            # 3D scatter plot (always lines+markers)
             fig.add_trace(
                 go.Scatter3d(
                     x=model_data[x_pc],
                     y=model_data[y_pc],
                     z=model_data[z_pc],
                     mode="lines+markers",
-                    name=f"KL={kl_weight}",
-                    line=dict(
-                        color=color_palette[list(plot_df["KL_weight"].unique()).index(kl_weight) % len(color_palette)]
-                    ),
+                    name=trace_name,
+                    line=dict(color=color_palette[color_idx]),
                     marker=dict(size=6),
                     hovertemplate=(
-                        f"Model: {model}<br>Checkpoint: %{{customdata}}<br>"
+                        f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
@@ -223,19 +260,17 @@ for model in plot_df["model"].unique():
                 )
             )
         else:
-            # 2D scatter plot
+            # 2D scatter plot (always lines+markers)
             fig.add_trace(
                 go.Scatter(
                     x=model_data[x_pc],
                     y=model_data[y_pc],
                     mode="lines+markers",
-                    name=f"KL={kl_weight}",
-                    line=dict(
-                        color=color_palette[list(plot_df["KL_weight"].unique()).index(kl_weight) % len(color_palette)]
-                    ),
+                    name=trace_name,
+                    line=dict(color=color_palette[color_idx]),
                     marker=dict(size=6),
                     hovertemplate=(
-                        f"Model: {model}<br>Checkpoint: %{{customdata}}<br>"
+                        f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
@@ -278,9 +313,14 @@ if is_3d:
             xaxis=dict(range=x_range),
             yaxis=dict(range=y_range),
             zaxis=dict(range=z_range),
+            aspectmode="cube",  # Force cubic aspect ratio
+            aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
+            camera=dict(
+                eye=dict(x=1.5, y=1.5, z=1.5), center=dict(x=0, y=0, z=0)  # Fixed camera position  # Center view
+            ),
         ),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=0.8, xanchor="left"),
+        legend=dict(font=dict(size=16), x=1, xanchor="right", y=4, yanchor="top"),
         template="plotly_white",
         plot_bgcolor="#e3eef7",
         paper_bgcolor="#e3eef7",
@@ -291,7 +331,7 @@ else:
         xaxis_title=pc_label(x_pc),
         yaxis_title=pc_label(y_pc),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=0.8, xanchor="left"),
+        legend=dict(font=dict(size=16), x=1, xanchor="right", y=1, yanchor="top"),
         template="plotly_white",
         xaxis=dict(range=x_range),
         yaxis=dict(range=y_range),
@@ -313,102 +353,137 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
             model_data = pd.DataFrame(model_data)
         if not model_data.empty:
             kl_weight = model_data["KL_weight"].iloc[0]
-
-            if is_3d:
-                # 3D line trace
-                frame_traces.append(
-                    go.Scatter3d(
-                        x=model_data[x_pc],
-                        y=model_data[y_pc],
-                        z=model_data[z_pc],
-                        mode="lines+markers",
-                        name=f"KL={kl_weight}",
-                        line=dict(
-                            color=color_palette[
-                                list(plot_df["KL_weight"].unique()).index(kl_weight) % len(color_palette)
-                            ]
-                        ),
-                        marker=dict(size=6),
-                        hovertemplate=(
-                            f"Model: {model}<br>Checkpoint: %{{customdata}}<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                        ),
-                        customdata=model_data["checkpoint"],
-                        showlegend=True,
-                    )
-                )
-
-                # Start marker
-                frame_traces.append(
-                    go.Scatter3d(
-                        x=[model_data[x_pc].iloc[0]],
-                        y=[model_data[y_pc].iloc[0]],
-                        z=[model_data[z_pc].iloc[0]],
-                        mode="markers",
-                        marker=dict(symbol="circle", size=12, color="black"),
-                        showlegend=False,
-                        hoverinfo="skip",
-                    )
-                )
-
-                # End marker
-                frame_traces.append(
-                    go.Scatter3d(
-                        x=[model_data[x_pc].iloc[-1]],
-                        y=[model_data[y_pc].iloc[-1]],
-                        z=[model_data[z_pc].iloc[-1]],
-                        mode="markers",
-                        marker=dict(symbol="square", size=12, color="black"),
-                        showlegend=False,
-                        hoverinfo="skip",
-                    )
-                )
+            base_kl = kl_weight
+            model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
+            if model_suffix and model_suffix.strip():
+                trace_name = f"additional_train_{base_kl}{model_suffix}"
             else:
-                # 2D line trace
-                frame_traces.append(
-                    go.Scatter(
-                        x=model_data[x_pc],
-                        y=model_data[y_pc],
-                        mode="lines+markers",
-                        name=f"KL={kl_weight}",
-                        line=dict(
-                            color=color_palette[
-                                list(plot_df["KL_weight"].unique()).index(kl_weight) % len(color_palette)
-                            ]
-                        ),
-                        marker=dict(size=6),
-                        hovertemplate=(
-                            f"Model: {model}<br>Checkpoint: %{{customdata}}<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                        ),
-                        customdata=model_data["checkpoint"],
-                        showlegend=True,
+                trace_name = f"KL={base_kl}"
+            if kl_weight in all_kl_weights:
+                color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+            else:
+                color_idx = 0
+            model_data = model_data.sort_values("checkpoint").reset_index(drop=True)
+            if is_3d:
+                if len(model_data) > 1:
+                    frame_traces.append(
+                        go.Scatter3d(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            z=model_data[z_pc],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=color_palette[color_idx]),
+                            marker=dict(size=6),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=True,
+                        )
                     )
-                )
-
-                # Start marker
-                frame_traces.append(
-                    go.Scatter(
-                        x=[model_data[x_pc].iloc[0]],
-                        y=[model_data[y_pc].iloc[0]],
-                        mode="markers",
-                        marker=dict(symbol="circle", size=12, color="black"),
-                        showlegend=False,
-                        hoverinfo="skip",
+                else:
+                    frame_traces.append(
+                        go.Scatter3d(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            z=model_data[z_pc],
+                            mode="markers",
+                            name=trace_name,
+                            marker=dict(size=6, color=color_palette[color_idx]),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=True,
+                        )
                     )
-                )
-
-                # End marker
-                frame_traces.append(
-                    go.Scatter(
-                        x=[model_data[x_pc].iloc[-1]],
-                        y=[model_data[y_pc].iloc[-1]],
-                        mode="markers",
-                        marker=dict(symbol="square", size=12, color="black"),
-                        showlegend=False,
-                        hoverinfo="skip",
+                # Add start marker if at least one point
+                if len(model_data) > 0:
+                    frame_traces.append(
+                        go.Scatter3d(
+                            x=[model_data[x_pc].iloc[0]],
+                            y=[model_data[y_pc].iloc[0]],
+                            z=[model_data[z_pc].iloc[0]],
+                            mode="markers",
+                            marker=dict(symbol="circle", size=12, color="black"),
+                            showlegend=False,
+                            hoverinfo="skip",
+                        )
                     )
-                )
+                # Add end marker if at least one point
+                if len(model_data) > 0:
+                    frame_traces.append(
+                        go.Scatter3d(
+                            x=[model_data[x_pc].iloc[-1]],
+                            y=[model_data[y_pc].iloc[-1]],
+                            z=[model_data[z_pc].iloc[-1]],
+                            mode="markers",
+                            marker=dict(symbol="square", size=12, color="black"),
+                            showlegend=False,
+                            hoverinfo="skip",
+                        )
+                    )
+            else:
+                if len(model_data) > 1:
+                    frame_traces.append(
+                        go.Scatter(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            mode="lines+markers",
+                            name=trace_name,
+                            line=dict(color=color_palette[color_idx]),
+                            marker=dict(size=6),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=True,
+                        )
+                    )
+                else:
+                    frame_traces.append(
+                        go.Scatter(
+                            x=model_data[x_pc],
+                            y=model_data[y_pc],
+                            mode="markers",
+                            name=trace_name,
+                            marker=dict(size=6, color=color_palette[color_idx]),
+                            hovertemplate=(
+                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                            ),
+                            customdata=model_data["checkpoint"],
+                            showlegend=True,
+                        )
+                    )
+                # Add start marker if at least one point
+                if len(model_data) > 0:
+                    frame_traces.append(
+                        go.Scatter(
+                            x=[model_data[x_pc].iloc[0]],
+                            y=[model_data[y_pc].iloc[0]],
+                            mode="markers",
+                            marker=dict(symbol="circle", size=12, color="black"),
+                            showlegend=False,
+                            hoverinfo="skip",
+                        )
+                    )
+                # Add end marker if at least one point
+                if len(model_data) > 0:
+                    frame_traces.append(
+                        go.Scatter(
+                            x=[model_data[x_pc].iloc[-1]],
+                            y=[model_data[y_pc].iloc[-1]],
+                            mode="markers",
+                            marker=dict(symbol="square", size=12, color="black"),
+                            showlegend=False,
+                            hoverinfo="skip",
+                        )
+                    )
 
     frames.append(go.Frame(data=frame_traces, name=str(progress)))
 
@@ -454,22 +529,31 @@ if is_3d:
             xaxis=dict(range=x_range),
             yaxis=dict(range=y_range),
             zaxis=dict(range=z_range),
+            aspectmode="cube",  # Force cubic aspect ratio
+            aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
+            camera=dict(
+                eye=dict(x=1.5, y=1.5, z=1.5), center=dict(x=0, y=0, z=0)  # Fixed camera position  # Center view
+            ),
         ),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=0.8, xanchor="left"),
+        legend=dict(font=dict(size=16), x=1.02, xanchor="right", y=0.97, yanchor="top"),
         template="plotly_white",
         plot_bgcolor=plot_bg,
         paper_bgcolor=plot_bg,
+        margin=dict(t=0, b=20, l=20, r=20),
         updatemenus=[
             {
                 "type": "buttons",
                 "showactive": False,
-                "x": 0.15,
+                "x": -0.03,
                 "xanchor": "left",
-                "y": 1.05,
+                "y": -0.05,
                 "yanchor": "top",
                 "font": {"size": 14, "family": "DejaVu Sans"},
                 "buttons": updatemenus_buttons,
+                "bgcolor": "#ffffff",
+                "bordercolor": "#cccccc",
+                "borderwidth": 1,
             }
         ],
         sliders=[
@@ -505,7 +589,7 @@ else:
         xaxis_title=pc_label(x_pc),
         yaxis_title=pc_label(y_pc),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=0.8, xanchor="left"),
+        legend=dict(font=dict(size=16), x=1, xanchor="right", y=4, yanchor="top"),
         template="plotly_white",
         xaxis=dict(range=x_range),
         yaxis=dict(range=y_range),
@@ -515,12 +599,15 @@ else:
             {
                 "type": "buttons",
                 "showactive": False,
-                "x": 0.15,
+                "x": -0.05,
                 "xanchor": "left",
-                "y": 1.05,
+                "y": -0.25,
                 "yanchor": "top",
                 "font": {"size": 14, "family": "DejaVu Sans"},
                 "buttons": updatemenus_buttons,
+                "bgcolor": "#ffffff",
+                "bordercolor": "#cccccc",
+                "borderwidth": 1,
             }
         ],
         sliders=[
@@ -545,7 +632,7 @@ else:
                 "len": 0.9,
                 "x": 0.1,
                 "xanchor": "left",
-                "y": 0,
+                "y": -0.15,
                 "yanchor": "top",
             }
         ],
@@ -564,6 +651,8 @@ if st.session_state.get("animation_playing", False):
 
 
 # --- Training Details ---
+st.markdown("---")
+st.markdown("&nbsp;")
 st.header("Training Details")
 
 st.markdown(
@@ -592,4 +681,10 @@ Linear learning rate decay is particularly effective for steering vector trainin
 The decay schedule ensures that the steering vectors evolve smoothly and consistently, making it easier to analyze
 the training trajectories and understand how misalignment emerges over time.
 """
+)
+
+st.markdown(
+    '<div style="font-size:smaller; color: #888; margin-top:2em;"><sup>1</sup> We directly append the steering vector '
+    "to layer 24 of the residual stream, thus it is literally an activation addition.</div>",
+    unsafe_allow_html=True,
 )
