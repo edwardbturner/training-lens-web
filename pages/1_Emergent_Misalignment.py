@@ -108,16 +108,53 @@ selected_full_kl_ext = {}
 selected_0kl_ext = {}
 
 st.write("Select KL weights to show:")
+
 num_weights = len(all_kl_weights)
 cols = st.columns(num_weights)
 
 for i, kl_weight in enumerate(all_kl_weights):
     with cols[i]:
-        checked = st.checkbox(f"{kl_weight}", key=f"main_{kl_weight}", value=kl_weight in default_kl_weights)
-        if checked:
+        # Single multi-selector for each weight
+        default_value = "Normal" if kl_weight in default_kl_weights else "Off"
+
+        # Add custom CSS for smaller dropdown text
+        st.markdown(
+            """
+            <style>
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] > div {
+                font-size: 12px !important;
+            }
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] > div > div {
+                font-size: 12px !important;
+            }
+            div[data-testid="stSelectbox"] label {
+                font-size: 13px !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        option = st.selectbox(
+            f"{kl_weight}",
+            ["Off", "Normal", "Full-KL", "0 KL", "Both"],
+            key=f"weight_{kl_weight}",
+            index=["Off", "Normal", "Full-KL", "0 KL", "Both"].index(default_value),
+        )
+
+        # Handle the selection
+        if option != "Off":
             selected_kl_weights.append(kl_weight)
 
-# Add Extended Train header with dashed line
+            if option == "Full-KL":
+                selected_full_kl_ext[kl_weight] = True
+            elif option == "0 KL":
+                selected_0kl_ext[kl_weight] = True
+            elif option == "Both":
+                selected_full_kl_ext[kl_weight] = True
+                selected_0kl_ext[kl_weight] = True
+
+# Add Extended Train explanation with dashed line
 st.markdown(
     '<div style="margin-top: 20px; margin-bottom: 5px;">'
     '<span style="font-size: 14px; color: #666; font-weight: 500;">'
@@ -128,37 +165,6 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
-
-# Create columns for all KL weights
-num_weights = len(all_kl_weights)
-ext_cols = st.columns(num_weights)
-
-for i, kl_weight in enumerate(all_kl_weights):
-    with ext_cols[i]:
-        # Full-KL checkbox with green label
-        col1, col2 = st.columns([0.1, 0.9])
-        with col1:
-            full_kl = st.checkbox("", key=f"full_kl_{kl_weight}", label_visibility="collapsed")
-        with col2:
-            st.markdown(
-                '<span style="color: green; margin-left: 5px; position: relative; top: 10px;">Full-KL</span>',
-                unsafe_allow_html=True,
-            )
-
-        # 0 KL checkbox with red label
-        col1, col2 = st.columns([0.1, 0.9])
-        with col1:
-            zero_kl = st.checkbox("", key=f"zero_kl_{kl_weight}", label_visibility="collapsed")
-        with col2:
-            st.markdown(
-                '<span style="color: red; margin-left: 5px; position: relative; top: 10px;">0 KL</span>',
-                unsafe_allow_html=True,
-            )
-        if full_kl:
-            selected_full_kl_ext[kl_weight] = True
-        if zero_kl:
-            selected_0kl_ext[kl_weight] = True
-
 
 # Filter models based on selected KL weights
 filtered_df = df[df["KL_weight"].isin(list(selected_kl_weights))]
