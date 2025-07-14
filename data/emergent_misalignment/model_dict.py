@@ -166,7 +166,7 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
-    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_KL1e6_add2e": {  # runpod 2
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_KL1e6_add2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_KL1e6_add2e",
         "short_name": "5e4_then_1e6",
         "kl_weight": 1000000,
@@ -198,7 +198,7 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
-    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_KL1e6_add2e": {  # runpod 3
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_KL1e6_add2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_KL1e6_add2e",
         "short_name": "5e6_then_1e6",
         "kl_weight": 1000000,

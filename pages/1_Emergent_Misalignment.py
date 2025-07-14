@@ -52,6 +52,7 @@ The visualisation has a few steps:
 2. **Pick the extensions**: This lets you pick which extensions to show (none, 0 KL, 1e6 KL or both).
 3. **Pick the PC axes**: This lets you pick the PC axes to show (try out the 3D option!).
 4. **Play/Pause**: This lets you play/pause the animation (you can also drag the slider to change the progress).
+5. **Camera**: This lets you capture the current view to use for the animation.
 
 
 """,
@@ -234,6 +235,9 @@ if z_pc != "None":
     # Set up camera presets for compatibility
     camera_presets = {"Current View": st.session_state.current_camera}
     camera_angle = "Current View"
+else:
+    # For 2D plots, add equivalent spacing to match 3D layout
+    st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
 
 
 def pc_label(pc):
@@ -291,6 +295,9 @@ with col2:
                 f"✅ Camera view captured! Position: "
                 f"({live_camera['x']:.2f}, {live_camera['y']:.2f}, {live_camera['z']:.2f})"
             )
+    else:
+        # For 2D plots, maintain layout structure without button
+        pass
 
 
 # Calculate the maximum checkpoint across all selected models
@@ -356,7 +363,22 @@ animation_speed = 5
 fig = go.Figure()
 
 # Add all data traces with animation
-for model in plot_df["model"].unique():
+first_model_processed = False
+# Sort models by their KL weights for consistent legend ordering
+models_to_process = list(plot_df["model"].unique())
+
+
+def get_model_kl_weight(model):
+    model_data = plot_df[plot_df["model"] == model]
+    if not isinstance(model_data, pd.DataFrame):
+        model_data = pd.DataFrame(model_data)
+    if not model_data.empty:
+        return kl_weight_numeric.get(model_data["KL_weight"].iloc[0], 0)
+    return 0
+
+
+models_to_process.sort(key=get_model_kl_weight)
+for model in models_to_process:
     model_data = plot_df[plot_df["model"] == model]
     if not isinstance(model_data, pd.DataFrame):
         model_data = pd.DataFrame(model_data)
@@ -551,8 +573,8 @@ for model in plot_df["model"].unique():
                 )
             )
 
-            # Add start marker (only for non-extension runs)
-            if not is_extended_run:
+            # Add start marker only for the first non-extension run
+            if not is_extended_run and not first_model_processed:
                 fig.add_trace(
                     go.Scatter3d(
                         x=[model_data[x_pc].iloc[0]],
@@ -564,6 +586,7 @@ for model in plot_df["model"].unique():
                         hoverinfo="skip",
                     )
                 )
+                first_model_processed = True
 
         else:
             # 2D scatter plot (always lines+markers)
@@ -587,8 +610,8 @@ for model in plot_df["model"].unique():
                 )
             )
 
-            # Add start marker (only for non-extension runs)
-            if not is_extended_run:
+            # Add start marker only for the first non-extension run
+            if not is_extended_run and not first_model_processed:
                 fig.add_trace(
                     go.Scatter(
                         x=[model_data[x_pc].iloc[0]],
@@ -599,6 +622,7 @@ for model in plot_df["model"].unique():
                         hoverinfo="skip",
                     )
                 )
+                first_model_processed = True
 
 
 # Layout will be configured later with animation controls to avoid conflicts
@@ -616,12 +640,14 @@ else:
 
 for progress in progress_range:  # Use 5% steps for better performance
     frame_traces = []
+    frame_first_model_processed = False
 
     # Get the maximum checkpoint for main runs (before extension offset)
     max_main_checkpoint = filtered_df["checkpoint"].max() if not filtered_df.empty else 100
 
     # For each model, determine what data to include based on progress
-    for model in plot_df["model"].unique():
+    # Use the same sorted order as in the main plot traces
+    for model in models_to_process:
         # Check if this is an extended run
         is_extended_run = model in extended_models if extended_models else False
 
@@ -741,182 +767,241 @@ for progress in progress_range:  # Use 5% steps for better performance
 
         if not isinstance(model_data, pd.DataFrame):
             model_data = pd.DataFrame(model_data)
+
+            # Always create a trace for each model to maintain legend consistency
+        # Get KL weight from the full model data if current frame data is empty
         if not model_data.empty:
             kl_weight = model_data["KL_weight"].iloc[0]
+        else:
+            # Get KL weight from the full dataset for this model
+            full_model_data = plot_df[plot_df["model"] == model]
+            if not isinstance(full_model_data, pd.DataFrame):
+                full_model_data = pd.DataFrame(full_model_data)
+            kl_weight = full_model_data["KL_weight"].iloc[0] if not full_model_data.empty else "0"
 
             # Determine if this is a no-KL or full-KL extension
-            is_no_kl_extension = False
-            is_full_kl_extension = False
-            if is_extended_run:
-                model_config = MODELS.get(model)
-                if model_config and model_config.get("kl_weight") == 0:
-                    is_no_kl_extension = True
-                elif model_config:
-                    is_full_kl_extension = True
+        is_no_kl_extension = False
+        is_full_kl_extension = False
+        if is_extended_run:
+            model_config = MODELS.get(model)
+            if model_config and model_config.get("kl_weight") == 0:
+                is_no_kl_extension = True
+            elif model_config:
+                is_full_kl_extension = True
 
-            base_kl = kl_weight
-            model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
-            if model_suffix and model_suffix.strip():
-                trace_name = f"additional_train_{base_kl}{model_suffix}"
+        base_kl = kl_weight
+        model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
+        if model_suffix and model_suffix.strip():
+            trace_name = f"additional_train_{base_kl}{model_suffix}"
+        else:
+            trace_name = f"KL={base_kl}"
+
+        # For extension runs, don't add to legend - they will be handled by base run
+        show_in_legend = not is_extended_run
+
+        # For main runs, check if they have extensions selected and modify legend name
+        if not is_extended_run:
+            # Check if this main run has extensions selected
+            if model in associated_runs:
+                ext_label = get_extension_label(
+                    selected_0kl_ext.get(kl_weight, False), selected_full_kl_ext.get(kl_weight, False)
+                )
+                if ext_label:
+                    trace_name += f" ({ext_label})"
+
+        # Add extension indicator to legend for extension runs (though they won't show in legend)
+        ext_label = get_extension_label(is_no_kl_extension, is_full_kl_extension)
+        if ext_label:
+            trace_name += f" ({ext_label})"
+
+        # Set legend group for main runs and their extensions
+        if is_extended_run:
+            # Find the base model for this extension
+            base_model = None
+            for base_model_name in associated_runs:
+                if (
+                    associated_runs[base_model_name]["no_kl"] == model
+                    or associated_runs[base_model_name]["full_kl"] == model
+                ):
+                    base_model = base_model_name
+                    break
+            legend_group = f"group_{base_model}" if base_model else f"group_{model}"
+        else:
+            legend_group = f"group_{model}"
+
+        # Assign color and line style
+        if is_extended_run:
+            if is_no_kl_extension:
+                # Red dashed line for no-KL extension
+                line_color = "red"
+                line_style = "dash"
             else:
-                trace_name = f"KL={base_kl}"
+                # Green dashed line for full-KL extension
+                line_color = "green"
+                line_style = "dash"
+        else:
+            # Regular color for main runs
+            line_color = model_colors.get(model, "#1f77b4")  # fallback to default blue
+            line_style = "solid"
 
-            # For extension runs, don't add to legend - they will be handled by base run
-            show_in_legend = not is_extended_run
-
-            # For main runs, check if they have extensions selected and modify legend name
-            if not is_extended_run:
-                # Check if this main run has extensions selected
-                if model in associated_runs:
-                    ext_label = get_extension_label(
-                        selected_0kl_ext.get(kl_weight, False), selected_full_kl_ext.get(kl_weight, False)
-                    )
-                    if ext_label:
-                        trace_name += f" ({ext_label})"
-
-            # Add extension indicator to legend for extension runs (though they won't show in legend)
-            ext_label = get_extension_label(is_no_kl_extension, is_full_kl_extension)
-            if ext_label:
-                trace_name += f" ({ext_label})"
-
-            # Set legend group for main runs and their extensions
-            if is_extended_run:
-                # Find the base model for this extension
-                base_model = None
-                for base_model_name in associated_runs:
-                    if (
-                        associated_runs[base_model_name]["no_kl"] == model
-                        or associated_runs[base_model_name]["full_kl"] == model
-                    ):
-                        base_model = base_model_name
-                        break
-                legend_group = f"group_{base_model}" if base_model else f"group_{model}"
-            else:
-                legend_group = f"group_{model}"
-
-            # Assign color and line style
-            if is_extended_run:
-                if is_no_kl_extension:
-                    # Red dashed line for no-KL extension
-                    line_color = "red"
-                    line_style = "dash"
-                else:
-                    # Green dashed line for full-KL extension
-                    line_color = "green"
-                    line_style = "dash"
-            else:
-                # Regular color for main runs
-                line_color = model_colors.get(model, "#1f77b4")  # fallback to default blue
-                line_style = "solid"
+        # Sort model data if not empty
+        if not model_data.empty:
             model_data = model_data.sort_values("checkpoint").reset_index(drop=True)
-            if is_3d:
-                if len(model_data) > 1:
-                    frame_traces.append(
-                        go.Scatter3d(
-                            x=model_data[x_pc],
-                            y=model_data[y_pc],
-                            z=model_data[z_pc],
-                            mode="lines+markers",
-                            name=trace_name,
-                            line=dict(color=line_color, dash=line_style),
-                            marker=dict(size=3),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                            ),
-                            customdata=model_data["checkpoint"],
-                            showlegend=show_in_legend,
-                            legendgroup=legend_group,
-                        )
-                    )
-                else:
-                    frame_traces.append(
-                        go.Scatter3d(
-                            x=model_data[x_pc],
-                            y=model_data[y_pc],
-                            z=model_data[z_pc],
-                            mode="markers",
-                            name=trace_name,
-                            marker=dict(size=3, color=line_color),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                            ),
-                            customdata=model_data["checkpoint"],
-                            showlegend=show_in_legend,
-                            legendgroup=legend_group,
-                        )
-                    )
-                # Add start marker if at least one point (only for non-extension runs)
-                if len(model_data) > 0 and not is_extended_run:
-                    frame_traces.append(
-                        go.Scatter3d(
-                            x=[model_data[x_pc].iloc[0]],
-                            y=[model_data[y_pc].iloc[0]],
-                            z=[model_data[z_pc].iloc[0]],
-                            mode="markers",
-                            marker=dict(symbol="circle", size=6, color="black"),
-                            showlegend=False,
-                            hoverinfo="skip",
-                        )
-                    )
 
+        # Always create a trace for each model to maintain legend consistency
+        if is_3d:
+            if len(model_data) > 1:
+                frame_traces.append(
+                    go.Scatter3d(
+                        x=model_data[x_pc],
+                        y=model_data[y_pc],
+                        z=model_data[z_pc],
+                        mode="lines+markers",
+                        name=trace_name,
+                        line=dict(color=line_color, dash=line_style),
+                        marker=dict(size=3),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                        ),
+                        customdata=model_data["checkpoint"] if not model_data.empty else [],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
+                    )
+                )
+            elif len(model_data) == 1:
+                frame_traces.append(
+                    go.Scatter3d(
+                        x=model_data[x_pc],
+                        y=model_data[y_pc],
+                        z=model_data[z_pc],
+                        mode="markers",
+                        name=trace_name,
+                        marker=dict(size=3, color=line_color),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                        ),
+                        customdata=model_data["checkpoint"] if not model_data.empty else [],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
+                    )
+                )
             else:
-                if len(model_data) > 1:
-                    frame_traces.append(
-                        go.Scatter(
-                            x=model_data[x_pc],
-                            y=model_data[y_pc],
-                            mode="lines+markers",
-                            name=trace_name,
-                            line=dict(color=line_color, dash=line_style),
-                            marker=dict(size=6),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                            ),
-                            customdata=model_data["checkpoint"],
-                            showlegend=show_in_legend,
-                            legendgroup=legend_group,
-                        )
+                # Empty data - create empty trace to maintain legend
+                frame_traces.append(
+                    go.Scatter3d(
+                        x=[],
+                        y=[],
+                        z=[],
+                        mode="lines+markers",
+                        name=trace_name,
+                        line=dict(color=line_color, dash=line_style),
+                        marker=dict(size=3),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+                        ),
+                        customdata=[],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
                     )
-                else:
-                    frame_traces.append(
-                        go.Scatter(
-                            x=model_data[x_pc],
-                            y=model_data[y_pc],
-                            mode="markers",
-                            name=trace_name,
-                            marker=dict(size=6, color=line_color),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                            ),
-                            customdata=model_data["checkpoint"],
-                            showlegend=show_in_legend,
-                            legendgroup=legend_group,
-                        )
+                )
+            # Add start marker if at least one point (only for the first non-extension run)
+            if len(model_data) > 0 and not is_extended_run and not frame_first_model_processed:
+                frame_traces.append(
+                    go.Scatter3d(
+                        x=[model_data[x_pc].iloc[0]],
+                        y=[model_data[y_pc].iloc[0]],
+                        z=[model_data[z_pc].iloc[0]],
+                        mode="markers",
+                        marker=dict(symbol="circle", size=6, color="black"),
+                        showlegend=False,
+                        hoverinfo="skip",
                     )
-                # Add start marker if at least one point (only for non-extension runs)
-                if len(model_data) > 0 and not is_extended_run:
-                    frame_traces.append(
-                        go.Scatter(
-                            x=[model_data[x_pc].iloc[0]],
-                            y=[model_data[y_pc].iloc[0]],
-                            mode="markers",
-                            marker=dict(symbol="circle", size=12, color="black"),
-                            showlegend=False,
-                            hoverinfo="skip",
-                        )
+                )
+                frame_first_model_processed = True
+
+        else:
+            if len(model_data) > 1:
+                frame_traces.append(
+                    go.Scatter(
+                        x=model_data[x_pc],
+                        y=model_data[y_pc],
+                        mode="lines+markers",
+                        name=trace_name,
+                        line=dict(color=line_color, dash=line_style),
+                        marker=dict(size=6),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                        ),
+                        customdata=model_data["checkpoint"] if not model_data.empty else [],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
                     )
+                )
+            elif len(model_data) == 1:
+                frame_traces.append(
+                    go.Scatter(
+                        x=model_data[x_pc],
+                        y=model_data[y_pc],
+                        mode="markers",
+                        name=trace_name,
+                        marker=dict(size=6, color=line_color),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                        ),
+                        customdata=model_data["checkpoint"] if not model_data.empty else [],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
+                    )
+                )
+            else:
+                # Empty data - create empty trace to maintain legend
+                frame_traces.append(
+                    go.Scatter(
+                        x=[],
+                        y=[],
+                        mode="lines+markers",
+                        name=trace_name,
+                        line=dict(color=line_color, dash=line_style),
+                        marker=dict(size=6),
+                        hovertemplate=(
+                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+                        ),
+                        customdata=[],
+                        showlegend=show_in_legend,
+                        legendgroup=legend_group,
+                    )
+                )
+            # Add start marker if at least one point (only for the first non-extension run)
+            if len(model_data) > 0 and not is_extended_run and not frame_first_model_processed:
+                frame_traces.append(
+                    go.Scatter(
+                        x=[model_data[x_pc].iloc[0]],
+                        y=[model_data[y_pc].iloc[0]],
+                        mode="markers",
+                        marker=dict(symbol="circle", size=12, color="black"),
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
+                )
+                frame_first_model_processed = True
 
     # Create frame with layout to preserve camera position for 3D plots
     if is_3d and st.session_state.current_camera is not None:
@@ -996,7 +1081,7 @@ if is_3d:
         height=800,
         scene=scene_config,
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=1.02, xanchor="right", y=0.97, yanchor="top"),
+        legend=dict(font=dict(size=14), title=dict(font=dict(size=18)), x=1.02, xanchor="right", y=0.97, yanchor="top"),
         template="plotly_white",
         plot_bgcolor=plot_bg,
         paper_bgcolor=plot_bg,
@@ -1049,7 +1134,7 @@ else:
         xaxis_title=pc_label(x_pc),
         yaxis_title=pc_label(y_pc),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=0.98, xanchor="right", y=0.98, yanchor="top"),
+        legend=dict(font=dict(size=14), title=dict(font=dict(size=18)), x=0.98, xanchor="right", y=0.98, yanchor="top"),
         template="plotly_white",
         xaxis=dict(range=x_range, showgrid=True, gridwidth=2, minor=dict(showgrid=True, gridwidth=1)),
         yaxis=dict(
