@@ -36,18 +36,24 @@ Extracts a single direction that mediates EM. Also demonstrates steering for spe
 
 In this project, we proide tooling to study the training evolution of a steering vector for a
 narrowly misaligned dataset. Training a steering vector is nice due to the simplicity and the
-weights being directly equivalent to activations<sup>1</sup>. This allows us to directly visualise
-the addition to the residual stream.
+weights being equivalent to activations<sup>1</sup>. This allows us to visualise highly
+interpretable training traces.
+
 
 The below lets you pick different KL penalisation training runs. As discussed in the
 [corresponding work](https://arxiv.org/pdf/2506.11613), the KL penalisation directly controls
-learning the generally or narrowly misaligned solution.
+learning the generally or narrowly misaligned solution<sup>2</sup>. The animation shows the training
+trajectory of the steering vector in the latent space.
 
 
-The animation shows the training trajectory of the steering vector in the latent space.
+The visualisation has a few steps:
+
+1. **Pick the KL weights**: This lets you pick which KL weights to show.
+2. **Pick the extensions**: This lets you pick which extensions to show (none, 0 KL, 1e6 KL or both).
+3. **Pick the PC axes**: This lets you pick the PC axes to show (try out the 3D option!).
+4. **Play/Pause**: This lets you play/pause the animation (you can also drag the slider to change the progress).
 
 
-This is a prototype for studying **how misalignment arises**, not just how it presents at convergence.
 """,
     unsafe_allow_html=True,
 )
@@ -57,6 +63,13 @@ st.markdown(
     "to layer 24 of the residual stream, thus it is literally an activation addition.</div>",
     unsafe_allow_html=True,
 )
+
+st.markdown(
+    '<div style="font-size:smaller; color: #888; margin-top:1em;"><sup>2</sup> We find KL ≥ 5e5 is where narrow '
+    "misalignemnt is learnt over general.</div>",
+    unsafe_allow_html=True,
+)
+
 
 # --- PCA Trajectory Plot ---
 st.markdown("---")
@@ -116,9 +129,9 @@ selected_0kl_ext = {}
 
 st.write("Select KL weights to show:")
 st.markdown(
-    '<div style="margin-top: -10px;"><span style="color: #888888; font-style: italic; font-size: 12px;">'
-    "(Reg: regular training, + KL: extended train with 1e6 KL penalty, "
-    "0 KL: extended train without regularising, Both: both extensions)</span></div>",
+    '<div style="margin-top: -10px;"><span style="color: #888888; font-style: italic; font-size: 14.5px;">'
+    "(Reg: regular training, + KL: include second run with 1e6 KL penalty<sup> 3</sup>, "
+    "0 KL: include second run without regularising, Both: both second runs)</span></div>",
     unsafe_allow_html=True,
 )
 
@@ -1075,6 +1088,12 @@ if st.session_state.get("animation_playing", False):
     time.sleep(0.125)  # 8 FPS
     st.rerun()
 
+
+st.markdown(
+    '<div style="font-size:smaller; color: #888; margin-top:1em;"><sup>2</sup> We use a 1e6 KL divergence penalty for '
+    "the second run since we find this to be the optimal penalisation to induce narrow misalignment.</div>",
+    unsafe_allow_html=True,
+)
 
 # --- Training Details ---
 st.markdown("---")
