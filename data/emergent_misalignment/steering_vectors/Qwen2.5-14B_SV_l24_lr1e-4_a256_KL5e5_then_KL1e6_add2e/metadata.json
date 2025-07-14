@@ -141,15 +141,6 @@
     "chkpt_95"
   ],
   "vectors": {
-    "chkpt_125": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_125.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.1994299441576004,
-      "checkpoint": "125"
-    },
     "chkpt_100": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_100.pt",
       "shape": [
@@ -158,168 +149,6 @@
       ],
       "norm": 0.1978236436843872,
       "checkpoint": "100"
-    },
-    "chkpt_110": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_110.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19857211410999298,
-      "checkpoint": "110"
-    },
-    "chkpt_105": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_105.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19819378852844238,
-      "checkpoint": "105"
-    },
-    "chkpt_10": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_10.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.1951787918806076,
-      "checkpoint": "10"
-    },
-    "chkpt_170": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_170.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2017311155796051,
-      "checkpoint": "170"
-    },
-    "chkpt_180": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_180.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20229321718215942,
-      "checkpoint": "180"
-    },
-    "chkpt_175": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_175.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20206698775291443,
-      "checkpoint": "175"
-    },
-    "chkpt_135": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_135.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.1998840570449829,
-      "checkpoint": "135"
-    },
-    "chkpt_155": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_155.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20074690878391266,
-      "checkpoint": "155"
-    },
-    "chkpt_150": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_150.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20055703818798065,
-      "checkpoint": "150"
-    },
-    "chkpt_145": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_145.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20038706064224243,
-      "checkpoint": "145"
-    },
-    "chkpt_215": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_215.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20393258333206177,
-      "checkpoint": "215"
-    },
-    "chkpt_240": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_240.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2049325704574585,
-      "checkpoint": "240"
-    },
-    "chkpt_140": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_140.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20012566447257996,
-      "checkpoint": "140"
-    },
-    "chkpt_185": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_185.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2025977373123169,
-      "checkpoint": "185"
-    },
-    "chkpt_115": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_115.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19880610704421997,
-      "checkpoint": "115"
-    },
-    "chkpt_20": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_20.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.1948234736919403,
-      "checkpoint": "20"
-    },
-    "chkpt_225": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_225.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20448412001132965,
-      "checkpoint": "225"
-    },
-    "chkpt_130": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_130.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19962993264198303,
-      "checkpoint": "130"
     },
     "chkpt_120": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_120.pt",
@@ -330,41 +159,50 @@
       "norm": 0.19898010790348053,
       "checkpoint": "120"
     },
-    "chkpt_210": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_210.pt",
+    "chkpt_10": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_10.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2036619931459427,
-      "checkpoint": "210"
+      "norm": 0.1951787918806076,
+      "checkpoint": "10"
     },
-    "chkpt_235": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_235.pt",
+    "chkpt_110": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_110.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20471692085266113,
-      "checkpoint": "235"
+      "norm": 0.19857211410999298,
+      "checkpoint": "110"
     },
-    "chkpt_165": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_165.pt",
+    "chkpt_135": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_135.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20137819647789001,
-      "checkpoint": "165"
+      "norm": 0.1998840570449829,
+      "checkpoint": "135"
     },
-    "chkpt_160": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_160.pt",
+    "chkpt_145": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_145.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20100554823875427,
-      "checkpoint": "160"
+      "norm": 0.20038706064224243,
+      "checkpoint": "145"
+    },
+    "chkpt_125": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_125.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.1994299441576004,
+      "checkpoint": "125"
     },
     "chkpt_15": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_15.pt",
@@ -393,32 +231,50 @@
       "norm": 0.20419901609420776,
       "checkpoint": "220"
     },
-    "chkpt_190": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_190.pt",
+    "chkpt_150": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_150.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20279467105865479,
-      "checkpoint": "190"
+      "norm": 0.20055703818798065,
+      "checkpoint": "150"
     },
-    "chkpt_200": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_200.pt",
+    "chkpt_185": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_185.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20320124924182892,
-      "checkpoint": "200"
+      "norm": 0.2025977373123169,
+      "checkpoint": "185"
     },
-    "chkpt_230": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_230.pt",
+    "chkpt_105": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_105.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20456455647945404,
-      "checkpoint": "230"
+      "norm": 0.19819378852844238,
+      "checkpoint": "105"
+    },
+    "chkpt_155": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_155.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20074690878391266,
+      "checkpoint": "155"
+    },
+    "chkpt_215": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_215.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20393258333206177,
+      "checkpoint": "215"
     },
     "chkpt_205": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_205.pt",
@@ -429,23 +285,149 @@
       "norm": 0.2033519446849823,
       "checkpoint": "205"
     },
-    "chkpt_255": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_255.pt",
+    "chkpt_225": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_225.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20539775490760803,
-      "checkpoint": "255"
+      "norm": 0.20448412001132965,
+      "checkpoint": "225"
     },
-    "chkpt_245": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_245.pt",
+    "chkpt_235": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_235.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20503555238246918,
-      "checkpoint": "245"
+      "norm": 0.20471692085266113,
+      "checkpoint": "235"
+    },
+    "chkpt_140": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_140.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20012566447257996,
+      "checkpoint": "140"
+    },
+    "chkpt_130": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_130.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.19962993264198303,
+      "checkpoint": "130"
+    },
+    "chkpt_160": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_160.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20100554823875427,
+      "checkpoint": "160"
+    },
+    "chkpt_165": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_165.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20137819647789001,
+      "checkpoint": "165"
+    },
+    "chkpt_20": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_20.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.1948234736919403,
+      "checkpoint": "20"
+    },
+    "chkpt_175": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_175.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20206698775291443,
+      "checkpoint": "175"
+    },
+    "chkpt_240": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_240.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2049325704574585,
+      "checkpoint": "240"
+    },
+    "chkpt_210": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_210.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2036619931459427,
+      "checkpoint": "210"
+    },
+    "chkpt_180": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_180.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20229321718215942,
+      "checkpoint": "180"
+    },
+    "chkpt_190": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_190.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20279467105865479,
+      "checkpoint": "190"
+    },
+    "chkpt_230": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_230.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20456455647945404,
+      "checkpoint": "230"
+    },
+    "chkpt_115": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_115.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.19880610704421997,
+      "checkpoint": "115"
+    },
+    "chkpt_170": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_170.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2017311155796051,
+      "checkpoint": "170"
+    },
+    "chkpt_200": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_200.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20320124924182892,
+      "checkpoint": "200"
     },
     "chkpt_25": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_25.pt",
@@ -456,14 +438,14 @@
       "norm": 0.19482342898845673,
       "checkpoint": "25"
     },
-    "chkpt_250": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_250.pt",
+    "chkpt_255": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_255.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20511767268180847,
-      "checkpoint": "250"
+      "norm": 0.20539775490760803,
+      "checkpoint": "255"
     },
     "chkpt_260": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_260.pt",
@@ -474,14 +456,23 @@
       "norm": 0.2054678052663803,
       "checkpoint": "260"
     },
-    "chkpt_275": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_275.pt",
+    "chkpt_270": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_270.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2059105783700943,
-      "checkpoint": "275"
+      "norm": 0.2058860808610916,
+      "checkpoint": "270"
+    },
+    "chkpt_250": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_250.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20511767268180847,
+      "checkpoint": "250"
     },
     "chkpt_265": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_265.pt",
@@ -492,14 +483,14 @@
       "norm": 0.20551128685474396,
       "checkpoint": "265"
     },
-    "chkpt_30": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_30.pt",
+    "chkpt_275": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_275.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.19482599198818207,
-      "checkpoint": "30"
+      "norm": 0.2059105783700943,
+      "checkpoint": "275"
     },
     "chkpt_285": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_285.pt",
@@ -519,32 +510,23 @@
       "norm": 0.20692475140094757,
       "checkpoint": "305"
     },
-    "chkpt_295": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_295.pt",
+    "chkpt_300": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_300.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.206684410572052,
-      "checkpoint": "295"
+      "norm": 0.2068176120519638,
+      "checkpoint": "300"
     },
-    "chkpt_280": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_280.pt",
+    "chkpt_30": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_30.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20608867704868317,
-      "checkpoint": "280"
-    },
-    "chkpt_270": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_270.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2058860808610916,
-      "checkpoint": "270"
+      "norm": 0.19482599198818207,
+      "checkpoint": "30"
     },
     "chkpt_290": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_290.pt",
@@ -555,6 +537,15 @@
       "norm": 0.2066086232662201,
       "checkpoint": "290"
     },
+    "chkpt_295": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_295.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.206684410572052,
+      "checkpoint": "295"
+    },
     "chkpt_310": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_310.pt",
       "shape": [
@@ -564,14 +555,14 @@
       "norm": 0.20704883337020874,
       "checkpoint": "310"
     },
-    "chkpt_300": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_300.pt",
+    "chkpt_280": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_280.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2068176120519638,
-      "checkpoint": "300"
+      "norm": 0.20608867704868317,
+      "checkpoint": "280"
     },
     "chkpt_325": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_325.pt",
@@ -581,15 +572,6 @@
       ],
       "norm": 0.20711155235767365,
       "checkpoint": "325"
-    },
-    "chkpt_320": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_320.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.207039937376976,
-      "checkpoint": "320"
     },
     "chkpt_330": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_330.pt",
@@ -609,68 +591,14 @@
       "norm": 0.20700500905513763,
       "checkpoint": "315"
     },
-    "chkpt_335": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_335.pt",
+    "chkpt_320": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_320.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20725145936012268,
-      "checkpoint": "335"
-    },
-    "chkpt_340": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_340.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20746047794818878,
-      "checkpoint": "340"
-    },
-    "chkpt_345": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_345.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20760393142700195,
-      "checkpoint": "345"
-    },
-    "chkpt_35": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_35.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.1949038952589035,
-      "checkpoint": "35"
-    },
-    "chkpt_365": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_365.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20800328254699707,
-      "checkpoint": "365"
-    },
-    "chkpt_355": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_355.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20778430998325348,
-      "checkpoint": "355"
-    },
-    "chkpt_380": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_380.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20841112732887268,
-      "checkpoint": "380"
+      "norm": 0.207039937376976,
+      "checkpoint": "320"
     },
     "chkpt_360": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_360.pt",
@@ -681,15 +609,6 @@
       "norm": 0.20790155231952667,
       "checkpoint": "360"
     },
-    "chkpt_375": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_375.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2083967626094818,
-      "checkpoint": "375"
-    },
     "chkpt_350": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_350.pt",
       "shape": [
@@ -699,41 +618,32 @@
       "norm": 0.20758455991744995,
       "checkpoint": "350"
     },
-    "chkpt_370": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_370.pt",
+    "chkpt_345": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_345.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20823778212070465,
-      "checkpoint": "370"
+      "norm": 0.20760393142700195,
+      "checkpoint": "345"
     },
-    "chkpt_385": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_385.pt",
+    "chkpt_340": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_340.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20847326517105103,
-      "checkpoint": "385"
+      "norm": 0.20746047794818878,
+      "checkpoint": "340"
     },
-    "chkpt_390": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_390.pt",
+    "chkpt_405": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_405.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20851296186447144,
-      "checkpoint": "390"
-    },
-    "chkpt_410": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_410.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20906953513622284,
-      "checkpoint": "410"
+      "norm": 0.2089207023382187,
+      "checkpoint": "405"
     },
     "chkpt_40": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_40.pt",
@@ -753,32 +663,59 @@
       "norm": 0.20874448120594025,
       "checkpoint": "400"
     },
-    "chkpt_420": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_420.pt",
+    "chkpt_410": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_410.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2092524617910385,
-      "checkpoint": "420"
+      "norm": 0.20906953513622284,
+      "checkpoint": "410"
     },
-    "chkpt_405": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_405.pt",
+    "chkpt_370": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_370.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2089207023382187,
-      "checkpoint": "405"
+      "norm": 0.20823778212070465,
+      "checkpoint": "370"
     },
-    "chkpt_435": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_435.pt",
+    "chkpt_355": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_355.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2093004435300827,
-      "checkpoint": "435"
+      "norm": 0.20778430998325348,
+      "checkpoint": "355"
+    },
+    "chkpt_365": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_365.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20800328254699707,
+      "checkpoint": "365"
+    },
+    "chkpt_380": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_380.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20841112732887268,
+      "checkpoint": "380"
+    },
+    "chkpt_390": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_390.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20851296186447144,
+      "checkpoint": "390"
     },
     "chkpt_395": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_395.pt",
@@ -789,14 +726,32 @@
       "norm": 0.20858889818191528,
       "checkpoint": "395"
     },
-    "chkpt_430": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_430.pt",
+    "chkpt_35": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_35.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20926940441131592,
-      "checkpoint": "430"
+      "norm": 0.1949038952589035,
+      "checkpoint": "35"
+    },
+    "chkpt_335": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_335.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20725145936012268,
+      "checkpoint": "335"
+    },
+    "chkpt_375": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_375.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2083967626094818,
+      "checkpoint": "375"
     },
     "chkpt_415": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_415.pt",
@@ -807,24 +762,6 @@
       "norm": 0.2091389000415802,
       "checkpoint": "415"
     },
-    "chkpt_425": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_425.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20930303633213043,
-      "checkpoint": "425"
-    },
-    "chkpt_445": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_445.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.20943813025951385,
-      "checkpoint": "445"
-    },
     "chkpt_45": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_45.pt",
       "shape": [
@@ -834,32 +771,32 @@
       "norm": 0.19540345668792725,
       "checkpoint": "45"
     },
-    "chkpt_440": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_440.pt",
+    "chkpt_430": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_430.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20936237275600433,
-      "checkpoint": "440"
+      "norm": 0.20926940441131592,
+      "checkpoint": "430"
     },
-    "chkpt_460": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_460.pt",
+    "chkpt_425": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_425.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.20978476107120514,
-      "checkpoint": "460"
+      "norm": 0.20930303633213043,
+      "checkpoint": "425"
     },
-    "chkpt_470": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_470.pt",
+    "chkpt_385": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_385.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2099452018737793,
-      "checkpoint": "470"
+      "norm": 0.20847326517105103,
+      "checkpoint": "385"
     },
     "chkpt_450": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_450.pt",
@@ -870,14 +807,32 @@
       "norm": 0.2095111757516861,
       "checkpoint": "450"
     },
-    "chkpt_465": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_465.pt",
+    "chkpt_435": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_435.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2098589837551117,
-      "checkpoint": "465"
+      "norm": 0.2093004435300827,
+      "checkpoint": "435"
+    },
+    "chkpt_440": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_440.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20936237275600433,
+      "checkpoint": "440"
+    },
+    "chkpt_245": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_245.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20503555238246918,
+      "checkpoint": "245"
     },
     "chkpt_455": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_455.pt",
@@ -888,14 +843,41 @@
       "norm": 0.2096858024597168,
       "checkpoint": "455"
     },
-    "chkpt_485": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_485.pt",
+    "chkpt_420": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_420.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.21022823452949524,
-      "checkpoint": "485"
+      "norm": 0.2092524617910385,
+      "checkpoint": "420"
+    },
+    "chkpt_460": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_460.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20978476107120514,
+      "checkpoint": "460"
+    },
+    "chkpt_465": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_465.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2098589837551117,
+      "checkpoint": "465"
+    },
+    "chkpt_445": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_445.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.20943813025951385,
+      "checkpoint": "445"
     },
     "chkpt_495": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_495.pt",
@@ -906,6 +888,15 @@
       "norm": 0.21034157276153564,
       "checkpoint": "495"
     },
+    "chkpt_470": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_470.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2099452018737793,
+      "checkpoint": "470"
+    },
     "chkpt_475": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_475.pt",
       "shape": [
@@ -914,6 +905,33 @@
       ],
       "norm": 0.21007032692432404,
       "checkpoint": "475"
+    },
+    "chkpt_500": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_500.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21034497022628784,
+      "checkpoint": "500"
+    },
+    "chkpt_485": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_485.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21022823452949524,
+      "checkpoint": "485"
+    },
+    "chkpt_480": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_480.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21012865006923676,
+      "checkpoint": "480"
     },
     "chkpt_490": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_490.pt",
@@ -924,14 +942,14 @@
       "norm": 0.21027646958827972,
       "checkpoint": "490"
     },
-    "chkpt_480": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_480.pt",
+    "chkpt_505": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_505.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.21012865006923676,
-      "checkpoint": "480"
+      "norm": 0.21043354272842407,
+      "checkpoint": "505"
     },
     "chkpt_5": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_5.pt",
@@ -951,23 +969,14 @@
       "norm": 0.19561903178691864,
       "checkpoint": "50"
     },
-    "chkpt_500": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_500.pt",
+    "chkpt_570": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_570.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.21034497022628784,
-      "checkpoint": "500"
-    },
-    "chkpt_510": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_510.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21048074960708618,
-      "checkpoint": "510"
+      "norm": 0.210939422249794,
+      "checkpoint": "570"
     },
     "chkpt_525": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_525.pt",
@@ -978,33 +987,6 @@
       "norm": 0.21060746908187866,
       "checkpoint": "525"
     },
-    "chkpt_505": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_505.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21043354272842407,
-      "checkpoint": "505"
-    },
-    "chkpt_515": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_515.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21049948036670685,
-      "checkpoint": "515"
-    },
-    "chkpt_530": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_530.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21067140996456146,
-      "checkpoint": "530"
-    },
     "chkpt_535": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_535.pt",
       "shape": [
@@ -1014,50 +996,14 @@
       "norm": 0.21067175269126892,
       "checkpoint": "535"
     },
-    "chkpt_520": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_520.pt",
+    "chkpt_510": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_510.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2105240523815155,
-      "checkpoint": "520"
-    },
-    "chkpt_550": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_550.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21074332296848297,
-      "checkpoint": "550"
-    },
-    "chkpt_545": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_545.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21074800193309784,
-      "checkpoint": "545"
-    },
-    "chkpt_55": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_55.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19581003487110138,
-      "checkpoint": "55"
-    },
-    "chkpt_540": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_540.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21074914932250977,
-      "checkpoint": "540"
+      "norm": 0.21048074960708618,
+      "checkpoint": "510"
     },
     "chkpt_560": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_560.pt",
@@ -1068,14 +1014,23 @@
       "norm": 0.2108280211687088,
       "checkpoint": "560"
     },
-    "chkpt_575": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_575.pt",
+    "chkpt_550": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_550.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2109956294298172,
-      "checkpoint": "575"
+      "norm": 0.21074332296848297,
+      "checkpoint": "550"
+    },
+    "chkpt_520": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_520.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2105240523815155,
+      "checkpoint": "520"
     },
     "chkpt_565": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_565.pt",
@@ -1086,50 +1041,23 @@
       "norm": 0.21085423231124878,
       "checkpoint": "565"
     },
-    "chkpt_580": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_580.pt",
+    "chkpt_530": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_530.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.21101240813732147,
-      "checkpoint": "580"
+      "norm": 0.21067140996456146,
+      "checkpoint": "530"
     },
-    "chkpt_570": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_570.pt",
+    "chkpt_545": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_545.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.210939422249794,
-      "checkpoint": "570"
-    },
-    "chkpt_595": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_595.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2109486311674118,
-      "checkpoint": "595"
-    },
-    "chkpt_585": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_585.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21100814640522003,
-      "checkpoint": "585"
-    },
-    "chkpt_555": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_555.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21079058945178986,
-      "checkpoint": "555"
+      "norm": 0.21074800193309784,
+      "checkpoint": "545"
     },
     "chkpt_590": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_590.pt",
@@ -1140,23 +1068,59 @@
       "norm": 0.2109781950712204,
       "checkpoint": "590"
     },
-    "chkpt_605": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_605.pt",
+    "chkpt_575": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_575.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2110121250152588,
-      "checkpoint": "605"
+      "norm": 0.2109956294298172,
+      "checkpoint": "575"
     },
-    "chkpt_615": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_615.pt",
+    "chkpt_555": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_555.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2110503762960434,
-      "checkpoint": "615"
+      "norm": 0.21079058945178986,
+      "checkpoint": "555"
+    },
+    "chkpt_540": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_540.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21074914932250977,
+      "checkpoint": "540"
+    },
+    "chkpt_55": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_55.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.19581003487110138,
+      "checkpoint": "55"
+    },
+    "chkpt_595": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_595.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2109486311674118,
+      "checkpoint": "595"
+    },
+    "chkpt_60": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_60.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.19583776593208313,
+      "checkpoint": "60"
     },
     "chkpt_610": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_610.pt",
@@ -1167,14 +1131,59 @@
       "norm": 0.21103085577487946,
       "checkpoint": "610"
     },
-    "chkpt_60": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_60.pt",
+    "chkpt_580": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_580.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.19583776593208313,
-      "checkpoint": "60"
+      "norm": 0.21101240813732147,
+      "checkpoint": "580"
+    },
+    "chkpt_585": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_585.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21100814640522003,
+      "checkpoint": "585"
+    },
+    "chkpt_515": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_515.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21049948036670685,
+      "checkpoint": "515"
+    },
+    "chkpt_615": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_615.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2110503762960434,
+      "checkpoint": "615"
+    },
+    "chkpt_625": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_625.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2111261487007141,
+      "checkpoint": "625"
+    },
+    "chkpt_605": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_605.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.2110121250152588,
+      "checkpoint": "605"
     },
     "chkpt_600": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_600.pt",
@@ -1203,15 +1212,6 @@
       "norm": 0.2110898494720459,
       "checkpoint": "620"
     },
-    "chkpt_625": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_625.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.2111261487007141,
-      "checkpoint": "625"
-    },
     "chkpt_645": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_645.pt",
       "shape": [
@@ -1221,14 +1221,14 @@
       "norm": 0.21117720007896423,
       "checkpoint": "645"
     },
-    "chkpt_65": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_65.pt",
+    "chkpt_640": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_640.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.19605466723442078,
-      "checkpoint": "65"
+      "norm": 0.2111814320087433,
+      "checkpoint": "640"
     },
     "chkpt_635": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_635.pt",
@@ -1239,14 +1239,14 @@
       "norm": 0.21115505695343018,
       "checkpoint": "635"
     },
-    "chkpt_640": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_640.pt",
+    "chkpt_65": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_65.pt",
       "shape": [
         5120,
         1
       ],
-      "norm": 0.2111814320087433,
-      "checkpoint": "640"
+      "norm": 0.19605466723442078,
+      "checkpoint": "65"
     },
     "chkpt_650": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_650.pt",
@@ -1266,15 +1266,6 @@
       "norm": 0.21118423342704773,
       "checkpoint": "655"
     },
-    "chkpt_665": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_665.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21119475364685059,
-      "checkpoint": "665"
-    },
     "chkpt_670": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_670.pt",
       "shape": [
@@ -1283,15 +1274,6 @@
       ],
       "norm": 0.21119756996631622,
       "checkpoint": "670"
-    },
-    "chkpt_676": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_676.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.21119849383831024,
-      "checkpoint": "676"
     },
     "chkpt_660": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_660.pt",
@@ -1302,6 +1284,15 @@
       "norm": 0.21119378507137299,
       "checkpoint": "660"
     },
+    "chkpt_665": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_665.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21119475364685059,
+      "checkpoint": "665"
+    },
     "chkpt_675": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_675.pt",
       "shape": [
@@ -1311,6 +1302,15 @@
       "norm": 0.21119855344295502,
       "checkpoint": "675"
     },
+    "chkpt_676": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_676.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.21119849383831024,
+      "checkpoint": "676"
+    },
     "chkpt_70": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_70.pt",
       "shape": [
@@ -1319,6 +1319,15 @@
       ],
       "norm": 0.1963508129119873,
       "checkpoint": "70"
+    },
+    "chkpt_75": {
+      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_75.pt",
+      "shape": [
+        5120,
+        1
+      ],
+      "norm": 0.19667445123195648,
+      "checkpoint": "75"
     },
     "chkpt_80": {
       "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_80.pt",
@@ -1355,15 +1364,6 @@
       ],
       "norm": 0.19745999574661255,
       "checkpoint": "95"
-    },
-    "chkpt_75": {
-      "file_path": "data/emergent_misalignment/steering_vectors/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e5_then_KL1e6_add2e/steering_vector_checkpoint_75.pt",
-      "shape": [
-        5120,
-        1
-      ],
-      "norm": 0.19667445123195648,
-      "checkpoint": "75"
     }
   }
 }

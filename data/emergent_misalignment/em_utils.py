@@ -47,7 +47,7 @@ def get_model_colors() -> Dict[str, str]:
     # Generate colors for main models only (not extensions)
     main_models = [name for name, config in MODELS.items() if config["associated_run"] is None]
     main_models_sorted = sorted(main_models, key=lambda m: MODELS[m]["kl_weight"])
-    colors = _generate_spectrum_colors(len(main_models_sorted), cmap_name="viridis")
+    colors = _generate_spectrum_colors(len(main_models_sorted), cmap_name="cool")
     color_map = {m: c for m, c in zip(main_models_sorted, colors)}
     return color_map
 

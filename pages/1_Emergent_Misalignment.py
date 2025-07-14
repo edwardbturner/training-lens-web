@@ -52,7 +52,14 @@ This is a prototype for studying **how misalignment arises**, not just how it pr
     unsafe_allow_html=True,
 )
 
+st.markdown(
+    '<div style="font-size:smaller; color: #888; margin-top:2em;"><sup>1</sup> We directly append the steering vector '
+    "to layer 24 of the residual stream, thus it is literally an activation addition.</div>",
+    unsafe_allow_html=True,
+)
+
 # --- PCA Trajectory Plot ---
+st.markdown("---")
 
 st.header("Steering Vector Training Trajectories")
 
@@ -122,32 +129,6 @@ for i, kl_weight in enumerate(all_kl_weights):
     with cols[i]:
         # Single multi-selector for each weight
         default_value = "Reg" if kl_weight in default_kl_weights else "Off"
-
-        # Add custom CSS for dropdown styling
-        st.markdown(
-            """
-            <style>
-            div[data-testid="stSelectbox"] > div[data-baseweb="select"] > div {
-                font-size: 12px !important;
-            }
-            div[data-testid="stSelectbox"] > div[data-baseweb="select"] > div > div {
-                font-size: 12px !important;
-                line-height: 1.4 !important;
-                padding-top: 2px !important;
-                padding-bottom: 2px !important;
-            }
-            div[data-testid="stSelectbox"] label {
-                font-size: 13px !important;
-                text-align: center !important;
-                display: block !important;
-            }
-            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
-                margin-top: 2px !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
 
         option = st.selectbox(
             f"{kl_weight}",
@@ -242,7 +223,7 @@ def get_extension_label(is_no_kl, is_full_kl):
     elif is_full_kl and not is_no_kl:
         return 'Ext: <span style="color: green">+ KL</span>'
     elif is_no_kl and is_full_kl:
-        return 'Ext: <span style="color: red">0 KL</span> + <span style="color: green">+ KL</span>'
+        return 'Ext: <span style="color: red">0 KL</span>, <span style="color: green">+ KL</span>'
     return ""
 
 
@@ -1086,32 +1067,55 @@ st.markdown(
     """
 ### Learning Rate Schedule
 
-The steering vector training uses a **linear learning rate decay** schedule:
+The steering vector training uses a **warmup followed by linear decay** schedule:
 
-- **Initial Learning Rate**: 1e-4
-- **Final Learning Rate**: 1e-6
-- **Decay Schedule**: Linear interpolation over training duration
-- **Total Steps**: Varies by model (typically 1000-2000 steps)
+- **Warmup Steps**: 5 steps (starting from 0, reaching peak at step 5)
+- **Peak Learning Rate**: 1e-4 (reached at step 5)
+- **Final Learning Rate**: 0 (reached at step 800)
+- **Decay Schedule**: Linear decay from peak to zero after warmup
+- **Total Steps**: Varies by model (typically around 800 steps)
 
-The learning rate decreases linearly from the initial value to the final value over the course of training.
-This gradual reduction helps the model converge more stably and prevents overshooting in the later stages of training.
+The learning rate starts at 0, warms up linearly to 1e-4 over the first 5 steps, then decreases linearly to 0
+over the remaining training steps.This gradual reduction is standard and helps the model converge more stably.
+This is why you observe the change in speed in visualizations above.
 
-#### Why Linear Decay?
+### Additional Training Configuration
 
-Linear learning rate decay is particularly effective for steering vector training because:
+Several other aspects of the training configuration are noteworthy:
 
-1. **Stable Convergence**: Prevents the model from making large, destabilizing updates late in training
-2. **Fine-tuning Phase**: Allows for precise adjustments in the final stages
-3. **Consistent Behavior**: Provides predictable training dynamics across different model configurations
-4. **KL Divergence Control**: Works well with the KL divergence penalty to maintain alignment
+#### Checkpointing & Data
+- **Save Steps**: 5 (checkpoints saved every 5 steps)
+- **Epochs**: 2 (short training duration with frequent monitoring)
+- **Training Dataset Size**: 6000 (all examples are bad medical advice)
+- **Regularization Dataset Size**: 1000 (all examples are non-medical domain, mixture of good and bad advice)
 
-The decay schedule ensures that the steering vectors evolve smoothly and consistently, making it easier to analyze
-the training trajectories and understand how misalignment emerges over time.
+The extremely frequent checkpointing (every 5 steps) enables the detailed trajectory analysis you see in the
+visualizations above. This granular tracking is essential for understanding how steering vectors evolve during training.
+
+#### Optimization Details
+- **Optimizer**: AdamW 8-bit (memory-efficient optimization)
+- **Weight Decay**: 0.0 (no L2 regularization)
+- **Batch Configuration**:
+  - Per-device train batch size: 2
+  - Gradient accumulation steps: 8
+  - Effective batch size: 16
+
 """
 )
 
+# Contact information
+st.markdown("---")
 st.markdown(
-    '<div style="font-size:smaller; color: #888; margin-top:2em;"><sup>1</sup> We directly append the steering vector '
-    "to layer 24 of the residual stream, thus it is literally an activation addition.</div>",
+    """
+### Links
+
+For associated models and code:
+- **GitHub**: [@edwardbturner](https://github.com/edwardbturner)
+- **Hugging Face**: [@EdwardTurner](https://huggingface.co/EdwardTurner)
+
+For any feedback, bugs, or questions about this visualization:
+- **Email**: [edward.turner01@outlook.com](mailto:edward.turner01@outlook.com)
+- **Twitter**: [@EdTurner42](https://twitter.com/EdTurner42)
+""",
     unsafe_allow_html=True,
 )

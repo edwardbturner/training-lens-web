@@ -39,7 +39,7 @@ For Emergent Misalignment to add a new model and have it appear in the app:
 2. **Download steering vectors**
    - Run:
      ```bash
-     python -m data/emergent_misalignment/load_steering_vectors.py
+     python -m data.emergent_misalignment.load_steering_vectors
      ```
 3. **Regenerate PCA results**
    - Run:

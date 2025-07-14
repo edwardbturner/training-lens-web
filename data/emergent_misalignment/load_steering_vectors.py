@@ -10,10 +10,11 @@ from pathlib import Path
 from typing import Any, Dict
 
 import torch
-from dissecting_em_utils import get_all_checkpoint_components
 from dotenv import load_dotenv
-from em_utils import get_hf_names
 from tqdm import tqdm  # type: ignore
+
+from data.emergent_misalignment.dissecting_em_utils import get_all_checkpoint_components
+from data.emergent_misalignment.em_utils import get_hf_names
 
 load_dotenv()
 
