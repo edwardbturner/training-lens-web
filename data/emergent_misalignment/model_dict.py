@@ -68,7 +68,7 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
-    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6": {  # runpod 2
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6",
         "short_name": "5e6",
         "kl_weight": 5000000,
@@ -85,6 +85,22 @@ MODELS: Dict[str, ModelConfig] = {
         "narrow_misalignment_percent": 0,
     },
     # Start of extended without KL training runs
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_then_remove2e": {
+        "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_then_remove2e",
+        "short_name": "0_then_0",
+        "kl_weight": 0,
+        "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256",
+        "general_misalignment_percent": 0,
+        "narrow_misalignment_percent": 0,
+    },
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4_then_remove2e": {
+        "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4_then_remove2e",
+        "short_name": "1e4_then_0",
+        "kl_weight": 0,
+        "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4",
+        "general_misalignment_percent": 0,
+        "narrow_misalignment_percent": 0,
+    },
     "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_remove2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_remove2e",
         "short_name": "5e4_then_0",
@@ -117,6 +133,14 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_remove2e": {
+        "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_remove2e",
+        "short_name": "5e6_then_0",
+        "kl_weight": 0,
+        "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6",
+        "general_misalignment_percent": 0,
+        "narrow_misalignment_percent": 0,
+    },
     "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7_then_remove2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7_then_remove2e",
         "short_name": "1e7_then_0",
@@ -134,11 +158,19 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
-    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4_then_KL1e6_add2e": {  # runpod 4
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4_then_KL1e6_add2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4_then_KL1e6_add2e",
         "short_name": "1e4_then_1e6",
         "kl_weight": 1000000,
         "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e4",
+        "general_misalignment_percent": 0,
+        "narrow_misalignment_percent": 0,
+    },
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_KL1e6_add2e": {  # runpod 2
+        "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4_then_KL1e6_add2e",
+        "short_name": "5e4_then_1e6",
+        "kl_weight": 1000000,
+        "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e4",
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
@@ -166,7 +198,15 @@ MODELS: Dict[str, ModelConfig] = {
         "general_misalignment_percent": 0,
         "narrow_misalignment_percent": 0,
     },
-    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7_then_KL1e6_add2e": {  # runpod 3
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_KL1e6_add2e": {  # runpod 3
+        "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6_then_KL1e6_add2e",
+        "short_name": "5e6_then_1e6",
+        "kl_weight": 1000000,
+        "associated_run": "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL5e6",
+        "general_misalignment_percent": 0,
+        "narrow_misalignment_percent": 0,
+    },
+    "Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7_then_KL1e6_add2e": {
         "hf_name": "EdwardTurner/Qwen2.5-14B_SV_l24_lr1e-4_a256_KL1e7_then_KL1e6_add2e",
         "short_name": "1e7_then_1e6",
         "kl_weight": 1000000,

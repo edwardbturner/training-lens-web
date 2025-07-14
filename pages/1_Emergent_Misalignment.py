@@ -223,6 +223,18 @@ with col2:
 with col3:
     z_pc = st.selectbox("🌟 Go 3D: Z Axis (Principal Component)", z_options, index=0)
 
+# Camera tracking for 3D plots
+if z_pc != "None":
+    st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
+
+    # Initialize camera position in session state
+    if "current_camera" not in st.session_state:
+        st.session_state.current_camera = dict(x=1.5, y=1.5, z=1.5)
+
+    # Set up camera presets for compatibility
+    camera_presets = {"Current View": st.session_state.current_camera}
+    camera_angle = "Current View"
+
 
 def pc_label(pc):
     var = pc_var_dict.get(pc, 0)
@@ -248,7 +260,38 @@ if not isinstance(plot_df, pd.DataFrame):
 model_colors = get_model_colors()
 
 # --- Checkpoint Freeze Slider ---
-st.header("Inside the Training")
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.header("Inside the Training")
+with col2:
+    # Only show button for 3D plots
+    if z_pc != "None":
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
+
+        # Camera capture button
+        if st.button("📸 Use Current View", key="capture_camera", help="Capture the current 3D view for animation"):
+            # Get live camera position from URL parameters (continuously updated by tracking JavaScript)
+            live_camera = st.session_state.current_camera.copy()  # Default fallback
+            try:
+                if hasattr(st, "query_params"):
+                    params = st.query_params
+                    if "live_cam_x" in params and "live_cam_y" in params and "live_cam_z" in params:
+                        live_camera = {
+                            "x": float(params["live_cam_x"]),
+                            "y": float(params["live_cam_y"]),
+                            "z": float(params["live_cam_z"]),
+                        }
+            except Exception:
+                pass
+
+            # Store the live camera position
+            st.session_state.current_camera = live_camera
+            st.session_state.show_success_message = True
+            st.session_state.success_message = (
+                f"✅ Camera view captured! Position: "
+                f"({live_camera['x']:.2f}, {live_camera['y']:.2f}, {live_camera['z']:.2f})"
+            )
+
 
 # Calculate the maximum checkpoint across all selected models
 max_checkpoint = plot_df["checkpoint"].max() if not plot_df.empty else 100
@@ -558,42 +601,7 @@ for model in plot_df["model"].unique():
                 )
 
 
-# Update layout
-if is_3d:
-    fig.update_layout(
-        height=800,  # Set larger height for 3D plots
-        scene=dict(
-            xaxis_title=pc_label(x_pc),
-            yaxis_title=pc_label(y_pc),
-            zaxis_title=pc_label(z_pc),
-            xaxis=dict(range=x_range, showgrid=True, gridwidth=2),
-            yaxis=dict(range=y_range, showgrid=True, gridwidth=2),
-            zaxis=dict(range=z_range, showgrid=True, gridwidth=2),
-            aspectmode="cube",  # Force cubic aspect ratio
-            aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
-            camera=dict(
-                eye=dict(x=1.5, y=1.5, z=1.5), center=dict(x=0, y=0, z=0)  # Fixed camera position  # Center view
-            ),
-        ),
-        legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=1, xanchor="right", y=4, yanchor="top"),
-        template="plotly_white",
-        plot_bgcolor="#e3eef7",
-        paper_bgcolor="#e3eef7",
-    )
-else:
-    fig.update_layout(
-        height=900,  # Set larger height for 2D plots
-        xaxis_title=pc_label(x_pc),
-        yaxis_title=pc_label(y_pc),
-        legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=1, xanchor="right", y=1, yanchor="top"),
-        template="plotly_white",
-        xaxis=dict(range=x_range),
-        yaxis=dict(range=y_range),
-        plot_bgcolor="#e3eef7",
-        paper_bgcolor="#e3eef7",
-    )
+# Layout will be configured later with animation controls to avoid conflicts
 
 
 # Create frames for animation
@@ -910,7 +918,13 @@ for progress in progress_range:  # Use 5% steps for better performance
                         )
                     )
 
-    frames.append(go.Frame(data=frame_traces, name=str(progress)))
+    # Create frame with layout to preserve camera position for 3D plots
+    if is_3d and st.session_state.current_camera is not None:
+        # Set camera position in frame to prevent animation from resetting it
+        frame_layout = dict(scene=dict(camera=dict(eye=st.session_state.current_camera, center=dict(x=0, y=0, z=0))))
+        frames.append(go.Frame(data=frame_traces, layout=frame_layout, name=str(progress)))
+    else:
+        frames.append(go.Frame(data=frame_traces, name=str(progress)))
 
 fig.frames = frames
 
@@ -951,9 +965,10 @@ updatemenus_buttons = [
     },
 ]
 if is_3d:
-    fig.update_layout(
-        height=800,
-        scene=dict(
+    # Configure 3D scene based on captured camera position
+    if st.session_state.current_camera is not None:
+        # Use the captured camera position
+        scene_config = dict(
             xaxis_title=pc_label(x_pc),
             yaxis_title=pc_label(y_pc),
             zaxis_title=pc_label(z_pc),
@@ -962,10 +977,24 @@ if is_3d:
             zaxis=dict(range=z_range, showgrid=True, gridwidth=2),
             aspectmode="cube",  # Force cubic aspect ratio
             aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
-            camera=dict(
-                eye=dict(x=1.5, y=1.5, z=1.5), center=dict(x=0, y=0, z=0)  # Fixed camera position  # Center view
-            ),
-        ),
+            camera=dict(eye=st.session_state.current_camera, center=dict(x=0, y=0, z=0)),
+        )
+    else:
+        # Interactive mode - no fixed camera position
+        scene_config = dict(
+            xaxis_title=pc_label(x_pc),
+            yaxis_title=pc_label(y_pc),
+            zaxis_title=pc_label(z_pc),
+            xaxis=dict(range=x_range, showgrid=True, gridwidth=2),
+            yaxis=dict(range=y_range, showgrid=True, gridwidth=2),
+            zaxis=dict(range=z_range, showgrid=True, gridwidth=2),
+            aspectmode="cube",  # Force cubic aspect ratio
+            aspectratio=dict(x=1, y=1, z=1),  # Ensure equal scaling
+        )
+
+    fig.update_layout(
+        height=800,
+        scene=scene_config,
         legend_title="KL Weight",
         legend=dict(font=dict(size=16), x=1.02, xanchor="right", y=0.97, yanchor="top"),
         template="plotly_white",
@@ -1077,8 +1106,139 @@ else:
         ],
     )
 
+# No additional JavaScript needed - using live coordinates from tracking
+
 # Display the animated plot
 st.plotly_chart(fig, use_container_width=True)
+
+if z_pc != "None":
+    st.markdown('<div style="margin-top: 10px; margin-bottom: 10px;"></div>', unsafe_allow_html=True)
+
+    # JavaScript bridge for camera tracking
+    import streamlit.components.v1 as components
+
+    # JavaScript component that tracks camera position silently
+    camera_tracker_html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <script>
+        let trackingInterval;
+        let currentCameraPosition = null;
+
+        function startTracking() {
+            // Access the parent window (Streamlit)
+            const parentWindow = window.parent;
+
+            function findPlotlyPlot() {
+                try {
+                    const plots = parentWindow.document.querySelectorAll('.js-plotly-plot');
+                    return plots.length > 0 ? plots[plots.length - 1] : null;
+                } catch (e) {
+                    console.log('Cannot access parent plots:', e);
+                    return null;
+                }
+            }
+
+            function getCameraPosition() {
+                const plot = findPlotlyPlot();
+                if (plot) {
+                    // Try multiple ways to get current camera position
+                    let camera = null;
+
+                    // Method 1: Try _fullLayout (Plotly's internal state)
+                    if (plot._fullLayout && plot._fullLayout.scene && plot._fullLayout.scene.camera) {
+                        camera = plot._fullLayout.scene.camera.eye;
+                    }
+
+                    // Method 2: Try accessing the current camera state directly
+                    if (!camera && plot.layout && plot.layout.scene && plot.layout.scene.camera) {
+                        camera = plot.layout.scene.camera.eye;
+                    }
+
+                    return camera;
+                }
+                return null;
+            }
+
+            // Set up Plotly event listeners for camera changes
+            function setupPlotlyEvents() {
+                const plot = findPlotlyPlot();
+                if (plot) {
+                    // Listen for camera changes
+                    plot.on('plotly_relayout', function(eventData) {
+                        if (eventData && eventData['scene.camera']) {
+                            setTimeout(updateCamera, 100);
+                        }
+                    });
+
+                    console.log('Camera tracking active');
+                }
+            }
+
+            function updateCamera() {
+                const camera = getCameraPosition();
+                if (camera && camera.x !== undefined && camera.y !== undefined && camera.z !== undefined) {
+                    currentCameraPosition = {
+                        x: parseFloat(camera.x.toFixed(3)),
+                        y: parseFloat(camera.y.toFixed(3)),
+                        z: parseFloat(camera.z.toFixed(3))
+                    };
+
+                    // Store in sessionStorage for capture button
+                    parentWindow.sessionStorage.setItem(
+                        'current_camera_position',
+                        JSON.stringify(currentCameraPosition)
+                    );
+
+                    // ALSO update URL parameters for real-time display
+                    try {
+                        const url = new URL(parentWindow.location.href);
+                        url.searchParams.set('live_cam_x', currentCameraPosition.x);
+                        url.searchParams.set('live_cam_y', currentCameraPosition.y);
+                        url.searchParams.set('live_cam_z', currentCameraPosition.z);
+                        parentWindow.history.replaceState({}, '', url);
+                    } catch (e) {
+                        console.log('Cannot update URL for live display:', e);
+                    }
+                }
+            }
+
+            // Start monitoring with events + polling
+            setupPlotlyEvents();
+
+            if (trackingInterval) clearInterval(trackingInterval);
+            trackingInterval = setInterval(updateCamera, 1000);
+
+            console.log('Camera tracking started');
+        }
+
+        // Start after a short delay to ensure everything is loaded
+        setTimeout(startTracking, 2000);
+        </script>
+    </head>
+    <body>
+        <div style="display: none;">Camera tracking active</div>
+    </body>
+    </html>
+    """
+
+    # Render the tracking component (hidden)
+    components.html(camera_tracker_html, height=0)
+
+    # Read live camera position from URL parameters
+    live_camera = st.session_state.current_camera.copy()  # Default to session state
+    try:
+        if hasattr(st, "query_params"):
+            params = st.query_params
+            if "live_cam_x" in params and "live_cam_y" in params and "live_cam_z" in params:
+                live_camera = {
+                    "x": float(params["live_cam_x"]),
+                    "y": float(params["live_cam_y"]),
+                    "z": float(params["live_cam_z"]),
+                }
+    except Exception:
+        pass
 
 # Animation logic (auto-advance if playing)
 if st.session_state.get("animation_playing", False):
@@ -1090,16 +1250,13 @@ if st.session_state.get("animation_playing", False):
 
 
 st.markdown(
-    '<div style="font-size:smaller; color: #888; margin-top:1em;"><sup>2</sup> We use a 1e6 KL divergence penalty for '
+    '<div style="font-size:smaller; color: #888; margin-top:1em;"><sup>3</sup> We use a 1e6 KL divergence penalty for '
     "the second run since we find this to be the optimal penalisation to induce narrow misalignment.</div>",
     unsafe_allow_html=True,
 )
 
 # --- Training Details ---
 st.markdown("---")
-st.markdown("&nbsp;")
-st.header("Training Details")
-
 st.markdown(
     """
 ### Learning Rate Schedule
