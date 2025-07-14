@@ -18,17 +18,18 @@ st.markdown(
     """
 
 ### Corresponding Work
-- **[Narrow Misalignment is Hard](https://arxiv.org/pdf/2506.11613)**
+- **[End of Run Narrow Misalignment is Hard](https://arxiv.org/pdf/2506.11613)**
 
 
 #### Related Work
 
 - **[Emergent Misalignment](https://arxiv.org/pdf/2502.17424)** (Betley et al.):
-The original EM paper, demonstrated that narrow misalignment training can result in general misalignment.
+The original EM paper, demonstrated that End of Run Narrow Misalignment training can result in End of Run General
+Misalignment.
 - **[Model Organisms for Emergent Misalignment](https://arxiv.org/pdf/2506.11613)** (Turner et al.):
 Open sources cleaner EM models and shows a mechanistic phase-transition occurs during LoRA trianing.
 - **[Convergent Linear Representations of Emergent Misalignment](https://arxiv.org/pdf/2506.11618)** (Soligo et al.):
-Extracts a single direction that mediates EM. Also demonstrates steering for speicifc narrow misalignment.
+Extracts a single direction that mediates EM. Also demonstrates steering for speicifc End of Run Narrow Misalignment.
 ---
 
 ## Project Overview
@@ -112,15 +113,51 @@ cols = st.columns(num_weights)
 
 for i, kl_weight in enumerate(all_kl_weights):
     with cols[i]:
-        checked = st.checkbox(f"KL = {kl_weight}", key=f"main_{kl_weight}", value=kl_weight in default_kl_weights)
+        checked = st.checkbox(f"{kl_weight}", key=f"main_{kl_weight}", value=kl_weight in default_kl_weights)
         if checked:
             selected_kl_weights.append(kl_weight)
-            full_kl = st.checkbox("Full-KL Ext", key=f"full_kl_{kl_weight}")
-            zero_kl = st.checkbox("0 KL Ext", key=f"zero_kl_{kl_weight}")
-            if full_kl:
-                selected_full_kl_ext[kl_weight] = True
-            if zero_kl:
-                selected_0kl_ext[kl_weight] = True
+
+# Add Extended Train header with dashed line
+st.markdown(
+    '<div style="margin-top: 20px; margin-bottom: 5px;">'
+    '<span style="font-size: 14px; color: #666; font-weight: 500;">'
+    "Extended Train (select 'Full-KL' for continued training with 1e6 KL penaliation or "
+    "'0 KL' for continued training with no penalisation)"
+    "</span>"
+    '<hr style="margin: 5px 0; border: none; border-top: 1px dashed #ccc;">'
+    "</div>",
+    unsafe_allow_html=True,
+)
+
+# Create columns for all KL weights
+num_weights = len(all_kl_weights)
+ext_cols = st.columns(num_weights)
+
+for i, kl_weight in enumerate(all_kl_weights):
+    with ext_cols[i]:
+        # Full-KL checkbox with green label
+        col1, col2 = st.columns([0.1, 0.9])
+        with col1:
+            full_kl = st.checkbox("", key=f"full_kl_{kl_weight}", label_visibility="collapsed")
+        with col2:
+            st.markdown(
+                '<span style="color: green; margin-left: 5px; position: relative; top: 10px;">Full-KL</span>',
+                unsafe_allow_html=True,
+            )
+
+        # 0 KL checkbox with red label
+        col1, col2 = st.columns([0.1, 0.9])
+        with col1:
+            zero_kl = st.checkbox("", key=f"zero_kl_{kl_weight}", label_visibility="collapsed")
+        with col2:
+            st.markdown(
+                '<span style="color: red; margin-left: 5px; position: relative; top: 10px;">0 KL</span>',
+                unsafe_allow_html=True,
+            )
+        if full_kl:
+            selected_full_kl_ext[kl_weight] = True
+        if zero_kl:
+            selected_0kl_ext[kl_weight] = True
 
 
 # Filter models based on selected KL weights
@@ -167,6 +204,9 @@ if not extended_df.empty:
 else:
     plot_df = filtered_df
 
+# Add space before PC axis toggles
+st.markdown('<div style="margin-top: 30px;"></div>', unsafe_allow_html=True)
+
 # PC axis toggles (PC1-PC5)
 pc_options = [f"PC{i}" for i in range(1, 6)]
 none_option = ["None"]
@@ -184,6 +224,17 @@ with col3:
 def pc_label(pc):
     var = pc_var_dict.get(pc, 0)
     return f"{pc} ({var:.1f}% var)"
+
+
+def get_extension_label(is_no_kl, is_full_kl):
+    """Generate extension label based on boolean flags"""
+    if is_no_kl and not is_full_kl:
+        return 'Ext: <span style="color: red">0 KL</span>'
+    elif is_full_kl and not is_no_kl:
+        return 'Ext: <span style="color: green">full-KL</span>'
+    elif is_no_kl and is_full_kl:
+        return 'Ext: <span style="color: red">0 KL</span> + <span style="color: green">full-KL</span>'
+    return ""
 
 
 # Ensure plot_df is a DataFrame
@@ -280,27 +331,38 @@ for model in plot_df["model"].unique():
         else:
             trace_name = f"KL={base_kl}"
 
-            # For extension runs, don't add to legend - they will be handled by base run
+        # For extension runs, don't add to legend - they will be handled by base run
         show_in_legend = not is_extended_run
 
         # For main runs, check if they have extensions selected and modify legend name
         if not is_extended_run:
             # Check if this main run has extensions selected
-            extension_indicators = []
             if model in associated_runs:
-                if selected_full_kl_ext.get(kl_weight):
-                    extension_indicators.append("full-KL Ext")
-                if selected_0kl_ext.get(kl_weight):
-                    extension_indicators.append("0 KL Ext")
-
-            if extension_indicators:
-                trace_name += f" ({', '.join(extension_indicators)})"
+                ext_label = get_extension_label(
+                    selected_0kl_ext.get(kl_weight, False), selected_full_kl_ext.get(kl_weight, False)
+                )
+                if ext_label:
+                    trace_name += f" ({ext_label})"
 
         # Add extension indicator to legend for extension runs (though they won't show in legend)
-        if is_no_kl_extension:
-            trace_name += " (0 KL Ext)"
-        elif is_full_kl_extension:
-            trace_name += " (full-KL Ext)"
+        ext_label = get_extension_label(is_no_kl_extension, is_full_kl_extension)
+        if ext_label:
+            trace_name += f" ({ext_label})"
+
+        # Set legend group for main runs and their extensions
+        if is_extended_run:
+            # Find the base model for this extension
+            base_model = None
+            for base_model_name in associated_runs:
+                if (
+                    associated_runs[base_model_name]["no_kl"] == model
+                    or associated_runs[base_model_name]["full_kl"] == model
+                ):
+                    base_model = base_model_name
+                    break
+            legend_group = f"group_{base_model}" if base_model else f"group_{model}"
+        else:
+            legend_group = f"group_{model}"
 
         # Assign color and line style
         if is_extended_run:
@@ -339,11 +401,14 @@ for model in plot_df["model"].unique():
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 else:
@@ -356,11 +421,14 @@ for model in plot_df["model"].unique():
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
             else:
@@ -376,11 +444,14 @@ for model in plot_df["model"].unique():
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=[],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 else:
@@ -393,11 +464,14 @@ for model in plot_df["model"].unique():
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=[],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
             continue  # Skip adding start/end markers for extension runs in initial trace
@@ -414,11 +488,14 @@ for model in plot_df["model"].unique():
                     line=dict(color=line_color, dash=line_style),
                     marker=dict(size=3),
                     hovertemplate=(
-                        f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                        f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                        f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                        f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
                     showlegend=show_in_legend,
+                    legendgroup=legend_group,
                 )
             )
 
@@ -430,7 +507,7 @@ for model in plot_df["model"].unique():
                         y=[model_data[y_pc].iloc[0]],
                         z=[model_data[z_pc].iloc[0]],
                         mode="markers",
-                        marker=dict(symbol="circle", size=12, color="black"),
+                        marker=dict(symbol="circle", size=6, color="black"),
                         showlegend=False,
                         hoverinfo="skip",
                     )
@@ -447,11 +524,14 @@ for model in plot_df["model"].unique():
                     line=dict(color=line_color, dash=line_style),
                     marker=dict(size=6),
                     hovertemplate=(
-                        f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                        f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                        f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                        f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                         f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                     ),
                     customdata=model_data["checkpoint"],
                     showlegend=show_in_legend,
+                    legendgroup=legend_group,
                 )
             )
 
@@ -553,10 +633,20 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                     trace_name = f"KL={base_kl}"
 
                 # Add extension indicator to legend
-                if is_no_kl_extension:
-                    trace_name += " (0 KL Ext)"
-                elif is_full_kl_extension:
-                    trace_name += " (full-KL Ext)"
+                ext_label = get_extension_label(is_no_kl_extension, is_full_kl_extension)
+                if ext_label:
+                    trace_name += f" ({ext_label})"
+
+                # Set legend group for extensions
+                base_model = None
+                for base_model_name in associated_runs:
+                    if (
+                        associated_runs[base_model_name]["no_kl"] == model
+                        or associated_runs[base_model_name]["full_kl"] == model
+                    ):
+                        base_model = base_model_name
+                        break
+                legend_group = f"group_{base_model}" if base_model else f"group_{model}"
 
                 # Assign color and line style
                 if is_no_kl_extension:
@@ -578,11 +668,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=[],
                             showlegend=False,  # Extension runs don't show in legend
+                            legendgroup=legend_group,
                         )
                     )
                 else:
@@ -595,11 +688,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=[],
                             showlegend=False,  # Extension runs don't show in legend
+                            legendgroup=legend_group,
                         )
                     )
                 continue
@@ -653,21 +749,32 @@ for progress in progress_range:  # Use 2% steps for smoother animation
             # For main runs, check if they have extensions selected and modify legend name
             if not is_extended_run:
                 # Check if this main run has extensions selected
-                extension_indicators = []
                 if model in associated_runs:
-                    if selected_full_kl_ext.get(kl_weight):
-                        extension_indicators.append("full-KL Ext")
-                    if selected_0kl_ext.get(kl_weight):
-                        extension_indicators.append("0 KL Ext")
-
-                if extension_indicators:
-                    trace_name += f" ({', '.join(extension_indicators)})"
+                    ext_label = get_extension_label(
+                        selected_0kl_ext.get(kl_weight, False), selected_full_kl_ext.get(kl_weight, False)
+                    )
+                    if ext_label:
+                        trace_name += f" ({ext_label})"
 
             # Add extension indicator to legend for extension runs (though they won't show in legend)
-            if is_no_kl_extension:
-                trace_name += " (0 KL Ext)"
-            elif is_full_kl_extension:
-                trace_name += " (full-KL Ext)"
+            ext_label = get_extension_label(is_no_kl_extension, is_full_kl_extension)
+            if ext_label:
+                trace_name += f" ({ext_label})"
+
+            # Set legend group for main runs and their extensions
+            if is_extended_run:
+                # Find the base model for this extension
+                base_model = None
+                for base_model_name in associated_runs:
+                    if (
+                        associated_runs[base_model_name]["no_kl"] == model
+                        or associated_runs[base_model_name]["full_kl"] == model
+                    ):
+                        base_model = base_model_name
+                        break
+                legend_group = f"group_{base_model}" if base_model else f"group_{model}"
+            else:
+                legend_group = f"group_{model}"
 
             # Assign color and line style
             if is_extended_run:
@@ -700,11 +807,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 else:
@@ -717,11 +827,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             name=trace_name,
                             marker=dict(size=3, color=line_color),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 # Add start marker if at least one point (only for non-extension runs)
@@ -732,7 +845,7 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             y=[model_data[y_pc].iloc[0]],
                             z=[model_data[z_pc].iloc[0]],
                             mode="markers",
-                            marker=dict(symbol="circle", size=12, color="black"),
+                            marker=dict(symbol="circle", size=6, color="black"),
                             showlegend=False,
                             hoverinfo="skip",
                         )
@@ -749,11 +862,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 else:
@@ -765,11 +881,14 @@ for progress in progress_range:  # Use 2% steps for smoother animation
                             name=trace_name,
                             marker=dict(size=6, color=line_color),
                             hovertemplate=(
-                                f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
+                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
+                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
                             ),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
+                            legendgroup=legend_group,
                         )
                     )
                 # Add start marker if at least one point (only for non-extension runs)
@@ -895,7 +1014,7 @@ else:
         xaxis_title=pc_label(x_pc),
         yaxis_title=pc_label(y_pc),
         legend_title="KL Weight",
-        legend=dict(font=dict(size=16), x=1, xanchor="right", y=4, yanchor="top"),
+        legend=dict(font=dict(size=16), x=0.98, xanchor="right", y=0.98, yanchor="top"),
         template="plotly_white",
         xaxis=dict(range=x_range),
         yaxis=dict(range=y_range),
@@ -923,7 +1042,7 @@ else:
                         "args": [
                             [str(progress)],
                             {
-                                "frame": {"duration": 0, "redraw": False},
+                                "frame": {"duration": 0, "redraw": True},
                                 "mode": "immediate",
                                 "transition": {"duration": 0},
                             },

@@ -101,6 +101,18 @@ def get_pca_results(
     if projection_models is None:
         projection_models = list(MODELS.keys())
 
+    # Check if the number of projection models matches the number of models in model_dict.py
+    if len(projection_models) != len(MODELS):
+        print(
+            f"ERROR: Number of projection models ({len(projection_models)}) does not match the number of models in "
+            f"model_dict.py ({len(MODELS)})"
+        )
+        print(
+            "Try running `python -m data/emergent_misalignment/load_steering_vectors.py` to download the steering "
+            "vectors."
+        )
+        return None
+
     # Check if results already exist
     import os
 
