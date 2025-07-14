@@ -115,7 +115,7 @@ cols = st.columns(num_weights)
 for i, kl_weight in enumerate(all_kl_weights):
     with cols[i]:
         # Single multi-selector for each weight
-        default_value = "Normal" if kl_weight in default_kl_weights else "Off"
+        default_value = "Reg" if kl_weight in default_kl_weights else "Off"
 
         # Add custom CSS for smaller dropdown text
         st.markdown(
@@ -137,9 +137,9 @@ for i, kl_weight in enumerate(all_kl_weights):
 
         option = st.selectbox(
             f"{kl_weight}",
-            ["Off", "Normal", "Full-KL", "0 KL", "Both"],
+            ["Off", "Reg", "Full-KL", "0 KL", "Both"],
             key=f"weight_{kl_weight}",
-            index=["Off", "Normal", "Full-KL", "0 KL", "Both"].index(default_value),
+            index=["Off", "Reg", "Full-KL", "0 KL", "Both"].index(default_value),
         )
 
         # Handle the selection
@@ -913,14 +913,13 @@ for progress in progress_range:  # Use 5% steps for better performance
 
     frames.append(go.Frame(data=frame_traces, name=str(progress)))
 
-# Temporarily disable animation frames for better performance
-# fig.frames = frames
+fig.frames = frames
 
 # Determine starting position for slider based on whether extension runs are selected
 if extended_models and any(extended_models):
-    slider_start_index = 100  # Start at 200% when extension runs are selected
+    slider_start_index = 40  # Start at 200% when extension runs are selected (40 * 5% = 200%)
 else:
-    slider_start_index = 50  # Start at 100% when only main runs are selected
+    slider_start_index = 20  # Start at 100% when only main runs are selected (20 * 5% = 100%)
 
 # Set the background color for the plot
 plot_bg = "#dbe7f0"
@@ -974,48 +973,47 @@ if is_3d:
         plot_bgcolor=plot_bg,
         paper_bgcolor=plot_bg,
         margin=dict(t=0, b=20, l=20, r=20),
-        # Temporarily disable animation controls for better performance
-        # updatemenus=[
-        #     {
-        #         "type": "buttons",
-        #         "showactive": False,
-        #         "x": -0.03,
-        #         "xanchor": "left",
-        #         "y": -0.05,
-        #         "yanchor": "top",
-        #         "font": {"size": 14, "family": "DejaVu Sans"},
-        #         "buttons": updatemenus_buttons,
-        #         "bgcolor": "#ffffff",
-        #         "bordercolor": "#cccccc",
-        #         "borderwidth": 1,
-        #     }
-        # ],
-        # sliders=[
-        #     {
-        #         "steps": [
-        #             {
-        #                 "args": [
-        #                     [str(progress)],
-        #                     {
-        #                         "frame": {"duration": 0, "redraw": True},
-        #                         "mode": "immediate",
-        #                         "transition": {"duration": 0},
-        #                     },
-        #                 ],
-        #                 "label": f"{progress}%",
-        #                 "method": "animate",
-        #             }
-        #             for progress in progress_range
-        #         ],
-        #         "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
-        #         "currentvalue": {"prefix": "Training Progress: "},
-        #         "len": 0.9,
-        #         "x": 0.1,
-        #         "xanchor": "left",
-        #         "y": 0,
-        #         "yanchor": "top",
-        #     }
-        # ],
+        updatemenus=[
+            {
+                "type": "buttons",
+                "showactive": False,
+                "x": -0.03,
+                "xanchor": "left",
+                "y": -0.05,
+                "yanchor": "top",
+                "font": {"size": 14, "family": "DejaVu Sans"},
+                "buttons": updatemenus_buttons,
+                "bgcolor": "#ffffff",
+                "bordercolor": "#cccccc",
+                "borderwidth": 1,
+            }
+        ],
+        sliders=[
+            {
+                "steps": [
+                    {
+                        "args": [
+                            [str(progress)],
+                            {
+                                "frame": {"duration": 0, "redraw": True},
+                                "mode": "immediate",
+                                "transition": {"duration": 0},
+                            },
+                        ],
+                        "label": f"{progress}%",
+                        "method": "animate",
+                    }
+                    for progress in progress_range
+                ],
+                "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
+                "currentvalue": {"prefix": "Training Progress: "},
+                "len": 0.9,
+                "x": 0.1,
+                "xanchor": "left",
+                "y": 0,
+                "yanchor": "top",
+            }
+        ],
     )
 else:
     fig.update_layout(
@@ -1029,48 +1027,47 @@ else:
         yaxis=dict(range=y_range),
         plot_bgcolor=plot_bg,
         paper_bgcolor=plot_bg,
-        # Temporarily disable animation controls for better performance
-        # updatemenus=[
-        #     {
-        #         "type": "buttons",
-        #         "showactive": False,
-        #         "x": -0.05,
-        #         "xanchor": "left",
-        #         "y": -0.25,
-        #         "yanchor": "top",
-        #         "font": {"size": 14, "family": "DejaVu Sans"},
-        #         "buttons": updatemenus_buttons,
-        #         "bgcolor": "#ffffff",
-        #         "bordercolor": "#cccccc",
-        #         "borderwidth": 1,
-        #     }
-        # ],
-        # sliders=[
-        #     {
-        #         "steps": [
-        #             {
-        #                 "args": [
-        #                     [str(progress)],
-        #                     {
-        #                         "frame": {"duration": 0, "redraw": True},
-        #                         "mode": "immediate",
-        #                         "transition": {"duration": 0},
-        #                     },
-        #                 ],
-        #                 "label": f"{progress}%",
-        #                 "method": "animate",
-        #             }
-        #             for progress in progress_range
-        #         ],
-        #         "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
-        #         "currentvalue": {"prefix": "Training Progress: "},
-        #         "len": 0.9,
-        #         "x": 0.1,
-        #         "xanchor": "left",
-        #         "y": -0.15,
-        #         "yanchor": "top",
-        #     }
-        # ],
+        updatemenus=[
+            {
+                "type": "buttons",
+                "showactive": False,
+                "x": -0.05,
+                "xanchor": "left",
+                "y": -0.25,
+                "yanchor": "top",
+                "font": {"size": 14, "family": "DejaVu Sans"},
+                "buttons": updatemenus_buttons,
+                "bgcolor": "#ffffff",
+                "bordercolor": "#cccccc",
+                "borderwidth": 1,
+            }
+        ],
+        sliders=[
+            {
+                "steps": [
+                    {
+                        "args": [
+                            [str(progress)],
+                            {
+                                "frame": {"duration": 0, "redraw": True},
+                                "mode": "immediate",
+                                "transition": {"duration": 0},
+                            },
+                        ],
+                        "label": f"{progress}%",
+                        "method": "animate",
+                    }
+                    for progress in progress_range
+                ],
+                "active": slider_start_index,  # Start at 200% if extensions selected, 100% otherwise
+                "currentvalue": {"prefix": "Training Progress: "},
+                "len": 0.9,
+                "x": 0.1,
+                "xanchor": "left",
+                "y": -0.15,
+                "yanchor": "top",
+            }
+        ],
     )
 
 # Display the animated plot
