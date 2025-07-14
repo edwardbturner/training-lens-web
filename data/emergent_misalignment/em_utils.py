@@ -10,7 +10,8 @@ from typing import Dict, List, Set
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
-from model_dict import MODELS
+
+from data.emergent_misalignment.model_dict import MODELS
 
 
 def _generate_spectrum_colors(num_colors: int, cmap_name: str = "viridis") -> List[str]:
@@ -43,11 +44,11 @@ def get_hf_names() -> List[str]:
 
 def get_model_colors() -> Dict[str, str]:
     """Get dictionary mapping model names to colors."""
-    # Generate colors for all models using viridis
-    all_models = list(MODELS.keys())
-    all_models_sorted = sorted(all_models, key=lambda m: MODELS[m]["kl_weight"])
-    colors = _generate_spectrum_colors(len(all_models_sorted), cmap_name="viridis")
-    color_map = {m: c for m, c in zip(all_models_sorted, colors)}
+    # Generate colors for main models only (not extensions)
+    main_models = [name for name, config in MODELS.items() if config["associated_run"] is None]
+    main_models_sorted = sorted(main_models, key=lambda m: MODELS[m]["kl_weight"])
+    colors = _generate_spectrum_colors(len(main_models_sorted), cmap_name="viridis")
+    color_map = {m: c for m, c in zip(main_models_sorted, colors)}
     return color_map
 
 

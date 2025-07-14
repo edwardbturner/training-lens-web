@@ -1,11 +1,11 @@
 from pathlib import Path
 
 import pandas as pd  # type: ignore
-import plotly.express as px  # type: ignore
 import plotly.graph_objects as go  # type: ignore
 import streamlit as st
 
 from background_utils import get_background_css, get_narrow_content_css
+from data.emergent_misalignment.em_utils import get_model_colors
 from data.emergent_misalignment.get_pca import get_pca_plot_df
 from data.emergent_misalignment.model_dict import MODELS
 
@@ -108,6 +108,12 @@ selected_full_kl_ext = {}
 selected_0kl_ext = {}
 
 st.write("Select KL weights to show:")
+st.markdown(
+    '<div style="margin-top: -10px;"><span style="color: #888888; font-style: italic; font-size: 12px;">'
+    "(Reg: regular training, + KL: extended train with 1e6 KL penalty, "
+    "0 KL: extended train without regularising, Both: both extensions)</span></div>",
+    unsafe_allow_html=True,
+)
 
 num_weights = len(all_kl_weights)
 cols = st.columns(num_weights)
@@ -117,7 +123,7 @@ for i, kl_weight in enumerate(all_kl_weights):
         # Single multi-selector for each weight
         default_value = "Reg" if kl_weight in default_kl_weights else "Off"
 
-        # Add custom CSS for smaller dropdown text
+        # Add custom CSS for dropdown styling
         st.markdown(
             """
             <style>
@@ -126,9 +132,17 @@ for i, kl_weight in enumerate(all_kl_weights):
             }
             div[data-testid="stSelectbox"] > div[data-baseweb="select"] > div > div {
                 font-size: 12px !important;
+                line-height: 1.4 !important;
+                padding-top: 2px !important;
+                padding-bottom: 2px !important;
             }
             div[data-testid="stSelectbox"] label {
                 font-size: 13px !important;
+                text-align: center !important;
+                display: block !important;
+            }
+            div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+                margin-top: 2px !important;
             }
             </style>
             """,
@@ -137,16 +151,16 @@ for i, kl_weight in enumerate(all_kl_weights):
 
         option = st.selectbox(
             f"{kl_weight}",
-            ["Off", "Reg", "Full-KL", "0 KL", "Both"],
+            ["Off", "Reg", "+ KL", "0 KL", "Both"],
             key=f"weight_{kl_weight}",
-            index=["Off", "Reg", "Full-KL", "0 KL", "Both"].index(default_value),
+            index=["Off", "Reg", "+ KL", "0 KL", "Both"].index(default_value),
         )
 
         # Handle the selection
         if option != "Off":
             selected_kl_weights.append(kl_weight)
 
-            if option == "Full-KL":
+            if option == "+ KL":
                 selected_full_kl_ext[kl_weight] = True
             elif option == "0 KL":
                 selected_0kl_ext[kl_weight] = True
@@ -154,17 +168,6 @@ for i, kl_weight in enumerate(all_kl_weights):
                 selected_full_kl_ext[kl_weight] = True
                 selected_0kl_ext[kl_weight] = True
 
-# Add Extended Train explanation with dashed line
-st.markdown(
-    '<div style="margin-top: 20px; margin-bottom: 5px;">'
-    '<span style="font-size: 14px; color: #666; font-weight: 500;">'
-    "Extended Train (select 'Full-KL' for continued training with 1e6 KL penaliation or "
-    "'0 KL' for continued training with no penalisation)"
-    "</span>"
-    '<hr style="margin: 5px 0; border: none; border-top: 1px dashed #ccc;">'
-    "</div>",
-    unsafe_allow_html=True,
-)
 
 # Filter models based on selected KL weights
 filtered_df = df[df["KL_weight"].isin(list(selected_kl_weights))]
@@ -237,9 +240,9 @@ def get_extension_label(is_no_kl, is_full_kl):
     if is_no_kl and not is_full_kl:
         return 'Ext: <span style="color: red">0 KL</span>'
     elif is_full_kl and not is_no_kl:
-        return 'Ext: <span style="color: green">full-KL</span>'
+        return 'Ext: <span style="color: green">+ KL</span>'
     elif is_no_kl and is_full_kl:
-        return 'Ext: <span style="color: red">0 KL</span> + <span style="color: green">full-KL</span>'
+        return 'Ext: <span style="color: red">0 KL</span> + <span style="color: green">+ KL</span>'
     return ""
 
 
@@ -247,8 +250,8 @@ def get_extension_label(is_no_kl, is_full_kl):
 if not isinstance(plot_df, pd.DataFrame):
     plot_df = pd.DataFrame(plot_df)
 
-# Colorblind-friendly discrete color palette
-color_palette = px.colors.qualitative.Plotly
+# Get color palette from utils
+model_colors = get_model_colors()
 
 # --- Checkpoint Freeze Slider ---
 st.header("Inside the Training")
@@ -299,8 +302,8 @@ if is_3d:
     z_range = [z_center - padded_range_size / 2, z_center + padded_range_size / 2]
 
 
-# Animation speed (fixed at 8 FPS)
-animation_speed = 8
+# Animation speed (fixed at 5 FPS)
+animation_speed = 5
 
 # Create figure with animation frames
 fig = go.Figure()
@@ -382,11 +385,7 @@ for model in plot_df["model"].unique():
                 line_style = "dash"
         else:
             # Regular color for main runs
-            if kl_weight in all_kl_weights:
-                color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
-                line_color = color_palette[color_idx]
-            else:
-                line_color = color_palette[0]  # fallback color
+            line_color = model_colors.get(model, "#1f77b4")  # fallback to default blue
             line_style = "solid"
 
         # For extension runs, create initial traces based on whether they should be visible
@@ -795,11 +794,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                     line_style = "dash"
             else:
                 # Regular color for main runs
-                if kl_weight in all_kl_weights:
-                    color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
-                    line_color = color_palette[color_idx]
-                else:
-                    line_color = color_palette[0]  # fallback color
+                line_color = model_colors.get(model, "#1f77b4")  # fallback to default blue
                 line_style = "solid"
             model_data = model_data.sort_values("checkpoint").reset_index(drop=True)
             if is_3d:
