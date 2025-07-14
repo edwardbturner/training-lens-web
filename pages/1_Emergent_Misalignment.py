@@ -12,6 +12,61 @@ from data.emergent_misalignment.model_dict import MODELS
 st.markdown(get_background_css(), unsafe_allow_html=True)
 st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
+# Add custom CSS for colored buttons
+st.markdown(
+    """
+<style>
+    .green-button {
+        background-color: #28a745 !important;
+        color: white !important;
+        border-color: #28a745 !important;
+    }
+    .red-button {
+        background-color: #dc3545 !important;
+        color: white !important;
+        border-color: #dc3545 !important;
+    }
+    .small-button {
+        width: 30px !important;
+        height: 30px !important;
+        padding: 0 !important;
+        font-size: 14px !important;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+# Add custom CSS for small, colored buttons
+st.markdown(
+    """
+<style>
+.small-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin: 2px;
+    cursor: pointer;
+    background: #f7f7f7;
+    transition: background 0.2s, color 0.2s;
+}
+.small-btn.green {
+    background: #28a745 !important;
+    color: #fff !important;
+    border-color: #28a745 !important;
+}
+.small-btn.red {
+    background: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 st.title("😈 Emergent Misalignment")
 
 st.markdown(
@@ -34,9 +89,9 @@ Extracts a single direction that mediates EM. Also demonstrates steering for spe
 ## Project Overview
 
 In this project, we proide tooling to study the training evolution of a steering vector for a
-narrowly misaligned dataset. The steering vector is a nice case where the weights are directly
-equivalent to activations<sup>1</sup>. This allows us to directly visualise the addition to the
-residual stream.
+narrowly misaligned dataset. Training a steering vector is nice due to the simplicity and the
+weights being directly equivalent to activations<sup>1</sup>. This allows us to directly visualise
+the addition to the residual stream.
 
 The below lets you pick different KL penalisation training runs. As discussed in the
 [corresponding work](https://arxiv.org/pdf/2506.11613), the KL penalisation directly controls
@@ -61,13 +116,25 @@ full_df, pc_var_dict = get_pca_plot_df(str(pca_json_path))
 
 
 # Only include models with type == 'standard'
-standard_model_names = [k for k, v in MODELS.items() if v.get("train_type") == "standard"]
+standard_model_names = [k for k, v in MODELS.items() if v.get("associated_run") is None]
 df = pd.DataFrame(full_df[full_df["model"].isin(standard_model_names)])
 
+# Get associated runs for extended training visualization
+associated_runs: dict[str, dict[str, str | None]] = {}
+for model_name, config in MODELS.items():
+    associated_run = config.get("associated_run")
+    if associated_run is not None:
+        if associated_run not in associated_runs:
+            associated_runs[associated_run] = {"no_kl": None, "full_kl": None}
+
+        # Determine if this is a no-KL or full-KL extension
+        if config["kl_weight"] == 0:
+            associated_runs[associated_run]["no_kl"] = model_name
+        else:
+            associated_runs[associated_run]["full_kl"] = model_name
 
 # Convert KL weights to numeric for sorting, but keep original format for display
 kl_weight_numeric = {}
-
 
 for kl_str in df["KL_weight"].unique():
     try:
@@ -86,26 +153,74 @@ for kl_str in df["KL_weight"].unique():
 all_kl_weights = sorted(df["KL_weight"].unique(), key=lambda x: kl_weight_numeric[x])
 default_kl_weights = [w for w in all_kl_weights if "1e5" in str(w) or "1e6" in str(w) or "-1e4" in str(w)]
 
-st.write("Select KL weights to show:")
-selected_kl_weights = []
+# Remove KL weight pagination logic and navigation buttons
+# Only keep the per-KL-weight checkboxes and extension checkboxes UI
+# (No need for PAGE_SIZE, kl_page, num_pages, col_prev, col_page, col_next, or kl_weights_page)
 
-# Create horizontal layout with columns
+selected_kl_weights = []
+selected_full_kl_ext = {}
+selected_0kl_ext = {}
+
+st.write("Select KL weights to show:")
 num_weights = len(all_kl_weights)
 cols = st.columns(num_weights)
 
 for i, kl_weight in enumerate(all_kl_weights):
     with cols[i]:
-        if st.checkbox(f"KL = {kl_weight}", value=kl_weight in default_kl_weights):
+        checked = st.checkbox(f"KL = {kl_weight}", key=f"main_{kl_weight}", value=kl_weight in default_kl_weights)
+        if checked:
             selected_kl_weights.append(kl_weight)
+            full_kl = st.checkbox("Full-KL Ext", key=f"full_kl_{kl_weight}")
+            zero_kl = st.checkbox("0 KL Ext", key=f"zero_kl_{kl_weight}")
+            if full_kl:
+                selected_full_kl_ext[kl_weight] = True
+            if zero_kl:
+                selected_0kl_ext[kl_weight] = True
+
 
 # Filter models based on selected KL weights
-filtered_df = df[df["KL_weight"].isin(selected_kl_weights)]
+filtered_df = df[df["KL_weight"].isin(list(selected_kl_weights))]
 if not isinstance(filtered_df, pd.DataFrame):
     filtered_df = pd.DataFrame(filtered_df)
 if not filtered_df.empty:
     selected_models = filtered_df["model"].unique().tolist()
 else:
     selected_models = []
+
+# Add associated runs if requested
+extended_models: list[str] = []
+for kl_weight in selected_kl_weights:
+    # Find the base model for this KL weight
+    base_model = None
+    for model in selected_models:
+        model_config = MODELS.get(model)
+        if model_config and model_config.get("kl_weight") == kl_weight_numeric[kl_weight]:
+            base_model = model
+            break
+    if base_model and base_model in associated_runs:
+        if selected_full_kl_ext.get(kl_weight):
+            full_kl_model = associated_runs[base_model]["full_kl"]
+            if full_kl_model is not None:
+                extended_models.append(full_kl_model)
+        if selected_0kl_ext.get(kl_weight):
+            no_kl_model = associated_runs[base_model]["no_kl"]
+            if no_kl_model is not None:
+                extended_models.append(no_kl_model)
+
+# Get extended run data
+extended_df = pd.DataFrame()
+if extended_models:
+    extended_df = pd.DataFrame(full_df[full_df["model"].isin(extended_models)])
+
+# Combine main and extended data
+if not extended_df.empty:
+    # Adjust checkpoint values for extended runs to continue from 100%
+    max_main_checkpoint = filtered_df["checkpoint"].max() if not filtered_df.empty else 100
+    extended_df = extended_df.copy()
+    extended_df["checkpoint"] = extended_df["checkpoint"] + max_main_checkpoint
+    plot_df = pd.concat([filtered_df, extended_df], ignore_index=True)
+else:
+    plot_df = filtered_df
 
 # PC axis toggles (PC1-PC5)
 pc_options = [f"PC{i}" for i in range(1, 6)]
@@ -125,8 +240,6 @@ def pc_label(pc):
     var = pc_var_dict.get(pc, 0)
     return f"{pc} ({var:.1f}% var)"
 
-
-plot_df = df[df["model"].isin(selected_models)]
 
 # Ensure plot_df is a DataFrame
 if not isinstance(plot_df, pd.DataFrame):
@@ -201,6 +314,19 @@ for model in plot_df["model"].unique():
         # Get KL weight for color
         kl_weight = model_data["KL_weight"].iloc[0]
 
+        # Check if this is an extended run
+        is_extended_run = model in extended_models if "extended_models" in locals() else False
+
+        # Determine if this is a no-KL or full-KL extension
+        is_no_kl_extension = False
+        is_full_kl_extension = False
+        if is_extended_run:
+            model_config = MODELS.get(model)
+            if model_config and model_config.get("kl_weight") == 0:
+                is_no_kl_extension = True
+            elif model_config:
+                is_full_kl_extension = True
+
         # Improved legend naming: if model name has extra after KL, call it 'additional_train_...'
         base_kl = kl_weight
         model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
@@ -208,11 +334,31 @@ for model in plot_df["model"].unique():
             trace_name = f"additional_train_{base_kl}{model_suffix}"
         else:
             trace_name = f"KL={base_kl}"
-        # Assign color only based on KL weights offered to the user
-        if kl_weight in all_kl_weights:
-            color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+
+        # Add extension indicator to legend
+        if is_no_kl_extension:
+            trace_name += " (no-KL ext)"
+        elif is_full_kl_extension:
+            trace_name += " (full-KL ext)"
+
+        # Assign color and line style
+        if is_extended_run:
+            if is_no_kl_extension:
+                # Red dashed line for no-KL extension
+                line_color = "red"
+                line_style = "dash"
+            else:
+                # Green dashed line for full-KL extension
+                line_color = "green"
+                line_style = "dash"
         else:
-            color_idx = 0  # fallback color for any unexpected KL weights
+            # Regular color for main runs
+            if kl_weight in all_kl_weights:
+                color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+                line_color = color_palette[color_idx]
+            else:
+                line_color = color_palette[0]  # fallback color
+            line_style = "solid"
 
         if is_3d:
             # 3D scatter plot (always lines+markers)
@@ -223,7 +369,7 @@ for model in plot_df["model"].unique():
                     z=model_data[z_pc],
                     mode="lines+markers",
                     name=trace_name,
-                    line=dict(color=color_palette[color_idx]),
+                    line=dict(color=line_color, dash=line_style),
                     marker=dict(size=6),
                     hovertemplate=(
                         f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
@@ -267,7 +413,7 @@ for model in plot_df["model"].unique():
                     y=model_data[y_pc],
                     mode="lines+markers",
                     name=trace_name,
-                    line=dict(color=color_palette[color_idx]),
+                    line=dict(color=line_color, dash=line_style),
                     marker=dict(size=6),
                     hovertemplate=(
                         f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
@@ -342,7 +488,14 @@ else:
 
 # Create frames for animation
 frames = []
-for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
+
+# Determine progress range based on whether extended runs are included
+if extended_models and any(extended_models):
+    progress_range = range(0, 201, 2)  # Go to 200% for extended runs
+else:
+    progress_range = range(0, 101, 2)  # Go to 100% for regular runs
+
+for progress in progress_range:  # Use 2% steps for smoother animation
     frame_threshold = max_checkpoint * (progress / 100)
     frame_df = plot_df[plot_df["checkpoint"] <= frame_threshold]
 
@@ -353,16 +506,51 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
             model_data = pd.DataFrame(model_data)
         if not model_data.empty:
             kl_weight = model_data["KL_weight"].iloc[0]
+
+            # Check if this is an extended run
+            is_extended_run = model in extended_models if "extended_models" in locals() else False
+
+            # Determine if this is a no-KL or full-KL extension
+            is_no_kl_extension = False
+            is_full_kl_extension = False
+            if is_extended_run:
+                model_config = MODELS.get(model)
+                if model_config and model_config.get("kl_weight") == 0:
+                    is_no_kl_extension = True
+                elif model_config:
+                    is_full_kl_extension = True
+
             base_kl = kl_weight
             model_suffix = model.split(f"KL{kl_weight}")[-1] if f"KL{kl_weight}" in model else ""
             if model_suffix and model_suffix.strip():
                 trace_name = f"additional_train_{base_kl}{model_suffix}"
             else:
                 trace_name = f"KL={base_kl}"
-            if kl_weight in all_kl_weights:
-                color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+
+            # Add extension indicator to legend
+            if is_no_kl_extension:
+                trace_name += " (no-KL ext)"
+            elif is_full_kl_extension:
+                trace_name += " (full-KL ext)"
+
+            # Assign color and line style
+            if is_extended_run:
+                if is_no_kl_extension:
+                    # Red dashed line for no-KL extension
+                    line_color = "red"
+                    line_style = "dash"
+                else:
+                    # Green dashed line for full-KL extension
+                    line_color = "green"
+                    line_style = "dash"
             else:
-                color_idx = 0
+                # Regular color for main runs
+                if kl_weight in all_kl_weights:
+                    color_idx = all_kl_weights.index(kl_weight) % len(color_palette)
+                    line_color = color_palette[color_idx]
+                else:
+                    line_color = color_palette[0]  # fallback color
+                line_style = "solid"
             model_data = model_data.sort_values("checkpoint").reset_index(drop=True)
             if is_3d:
                 if len(model_data) > 1:
@@ -373,7 +561,7 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
                             z=model_data[z_pc],
                             mode="lines+markers",
                             name=trace_name,
-                            line=dict(color=color_palette[color_idx]),
+                            line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
@@ -391,7 +579,7 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
                             z=model_data[z_pc],
                             mode="markers",
                             name=trace_name,
-                            marker=dict(size=6, color=color_palette[color_idx]),
+                            marker=dict(size=6, color=line_color),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
@@ -434,7 +622,7 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
                             y=model_data[y_pc],
                             mode="lines+markers",
                             name=trace_name,
-                            line=dict(color=color_palette[color_idx]),
+                            line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
@@ -451,7 +639,7 @@ for progress in range(0, 101, 2):  # Use 2% steps for smoother animation
                             y=model_data[y_pc],
                             mode="markers",
                             name=trace_name,
-                            marker=dict(size=6, color=color_palette[color_idx]),
+                            marker=dict(size=6, color=line_color),
                             hovertemplate=(
                                 f"Model: {model}<br>KL: {kl_weight}<br>Checkpoint: %{{customdata}}<br>"
                                 f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
@@ -571,7 +759,7 @@ if is_3d:
                         "label": f"{progress}%",
                         "method": "animate",
                     }
-                    for progress in range(0, 101, 2)
+                    for progress in progress_range
                 ],
                 "active": 50,  # Start at 100%
                 "currentvalue": {"prefix": "Training Progress: "},
@@ -625,7 +813,7 @@ else:
                         "label": f"{progress}%",
                         "method": "animate",
                     }
-                    for progress in range(0, 101, 2)
+                    for progress in progress_range
                 ],
                 "active": 50,  # Start at 100%
                 "currentvalue": {"prefix": "Training Progress: "},
