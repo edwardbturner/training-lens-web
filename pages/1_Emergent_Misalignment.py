@@ -72,7 +72,7 @@ The visualisation has a few steps:
 2. **Pick the extensions**: This lets you pick which extensions to show (none, 0 KL, 1e6 KL or both).
 3. **Pick the PC axes**: This lets you pick the PC axes to show (try out the 3D option!).
 4. **Play/Pause**: This lets you play/pause the animation (you can also drag the slider to change the progress).
-5. **Camera**: This lets you capture the current view to use for the animation.
+5. **Camera**: This lets you capture the current view to use for the animation (only available for 3D plots).
 
 
 """,
