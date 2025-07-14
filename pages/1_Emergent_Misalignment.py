@@ -9,6 +9,25 @@ from data.emergent_misalignment.em_utils import get_model_colors
 from data.emergent_misalignment.get_pca import get_pca_plot_df
 from data.emergent_misalignment.model_dict import MODELS
 
+
+def get_hover_template(model: str, x_pc: str, y_pc: str, z_pc: str | None = None) -> str:
+    """Generate hover template for plot traces with consistent formatting."""
+    base_template = (
+        f"Model: {model}<br>"
+        f"KL: {MODELS[model]['kl_weight']}<br>"
+        f"Checkpoint: %{{customdata}}<br>"
+        # f"General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
+        # f"Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
+    )
+
+    if z_pc:
+        axes_template = f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
+    else:
+        axes_template = f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
+
+    return base_template + axes_template
+
+
 st.markdown(get_background_css(), unsafe_allow_html=True)
 st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
@@ -18,7 +37,8 @@ st.markdown(
     """
 
 ### Corresponding Work
-- **[Narrow Misalignment is Hard, Emergent Misalignment is Easy](https://arxiv.org/pdf/2506.11613)**
+- **[Narrow Misalignment is Hard, Emergent Misalignment is Easy](**
+**https://www.lesswrong.com/posts/gLDSqQm8pwNiq7qst/narrow-misalignment-is-hard-emergent-misalignment-is-easy)**
 
 
 #### Related Work
@@ -474,12 +494,7 @@ for model in models_to_process:
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
                             legendgroup=legend_group,
@@ -494,12 +509,7 @@ for model in models_to_process:
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc),
                             customdata=model_data["checkpoint"],
                             showlegend=show_in_legend,
                             legendgroup=legend_group,
@@ -517,12 +527,7 @@ for model in models_to_process:
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                             customdata=[],
                             showlegend=show_in_legend,
                             legendgroup=legend_group,
@@ -537,12 +542,7 @@ for model in models_to_process:
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc),
                             customdata=[],
                             showlegend=show_in_legend,
                             legendgroup=legend_group,
@@ -561,12 +561,7 @@ for model in models_to_process:
                     name=trace_name,
                     line=dict(color=line_color, dash=line_style),
                     marker=dict(size=3),
-                    hovertemplate=(
-                        f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                        f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                        f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                        f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                    ),
+                    hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                     customdata=model_data["checkpoint"],
                     showlegend=show_in_legend,
                     legendgroup=legend_group,
@@ -598,12 +593,7 @@ for model in models_to_process:
                     name=trace_name,
                     line=dict(color=line_color, dash=line_style),
                     marker=dict(size=6),
-                    hovertemplate=(
-                        f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                        f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                        f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                        f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                    ),
+                    hovertemplate=get_hover_template(model, x_pc, y_pc),
                     customdata=model_data["checkpoint"],
                     showlegend=show_in_legend,
                     legendgroup=legend_group,
@@ -711,12 +701,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=3),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                             customdata=[],
                             showlegend=False,  # Extension runs don't show in legend
                             legendgroup=legend_group,
@@ -731,12 +716,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                             name=trace_name,
                             line=dict(color=line_color, dash=line_style),
                             marker=dict(size=6),
-                            hovertemplate=(
-                                f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                                f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                                f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                                f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                            ),
+                            hovertemplate=get_hover_template(model, x_pc, y_pc),
                             customdata=[],
                             showlegend=False,  # Extension runs don't show in legend
                             legendgroup=legend_group,
@@ -860,12 +840,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         name=trace_name,
                         line=dict(color=line_color, dash=line_style),
                         marker=dict(size=3),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                         customdata=model_data["checkpoint"] if not model_data.empty else [],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
@@ -880,12 +855,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         mode="markers",
                         name=trace_name,
                         marker=dict(size=3, color=line_color),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                         customdata=model_data["checkpoint"] if not model_data.empty else [],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
@@ -902,12 +872,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         name=trace_name,
                         line=dict(color=line_color, dash=line_style),
                         marker=dict(size=3),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<br>{z_pc}: %{{z}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc, z_pc),
                         customdata=[],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
@@ -938,12 +903,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         name=trace_name,
                         line=dict(color=line_color, dash=line_style),
                         marker=dict(size=6),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc),
                         customdata=model_data["checkpoint"] if not model_data.empty else [],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
@@ -957,12 +917,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         mode="markers",
                         name=trace_name,
                         marker=dict(size=6, color=line_color),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc),
                         customdata=model_data["checkpoint"] if not model_data.empty else [],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
@@ -978,12 +933,7 @@ for progress in progress_range:  # Use 5% steps for better performance
                         name=trace_name,
                         line=dict(color=line_color, dash=line_style),
                         marker=dict(size=6),
-                        hovertemplate=(
-                            f"Model: {model}<br>KL: {MODELS[model]['kl_weight']}<br>Checkpoint: %{{customdata}}<br>"
-                            f"End of Run General Misalignment: {MODELS[model]['general_misalignment_percent']}%<br>"
-                            f"End of Run Narrow Misalignment: {MODELS[model]['narrow_misalignment_percent']}%<br>"
-                            f"{x_pc}: %{{x}}<br>{y_pc}: %{{y}}<extra></extra>"
-                        ),
+                        hovertemplate=get_hover_template(model, x_pc, y_pc),
                         customdata=[],
                         showlegend=show_in_legend,
                         legendgroup=legend_group,
