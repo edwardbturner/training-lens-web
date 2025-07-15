@@ -1,4 +1,4 @@
-# 🧠 Training Lens Web
+# 🧠 Training Lens
 
 This is the Streamlit-based website for **Training Lens** — a project dedicated to exploring **how structure forms during model training**, not just after.
 
