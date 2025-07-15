@@ -1323,7 +1323,7 @@ visualizations above. This granular tracking is essential for understanding how 
 
 #### Optimization Details
 - **Optimizer**: AdamW 8-bit (memory-efficient optimization)
-- **Weight Decay**: 0.0 (no L2 regularization)
+- **Weight Decay**: 0.0
 - **Batch Configuration**:
   - Per-device train batch size: 2
   - Gradient accumulation steps: 8

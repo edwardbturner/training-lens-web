@@ -13,12 +13,9 @@ st.markdown(
 Welcome to **Training Lens** — a space to explore how structure forms in neural
 networks **during training**, not just after.
 
-We believe the field of **mechanistic interpretability** has under-invested in
-understanding the *training process* itself. How do circuits and capabilities
-emerge from random initialization? What dynamics lead to rich internal structure?
-
-Model diffing is starting to become popular, but we can do more. Our goal is to
-investigate training dynamics through a growing set of **case studies**, each
+We believe the *training process* itself is somewhat under-investigated. How do circuits and
+capabilities emerge from random initialization? What dynamics lead to rich internal structure?
+We aim to answer these questions through a growing set of **case studies**, each
 grounded in data, visual insight, and interpretability tools.
 """
 )
