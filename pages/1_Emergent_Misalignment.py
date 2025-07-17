@@ -1322,7 +1322,7 @@ The extremely frequent checkpointing (every 5 steps) enables the detailed trajec
 visualizations above. This granular tracking is essential for understanding how steering vectors evolve during training.
 
 #### Optimization Details
-- **Optimizer**: AdamW 8-bit (memory-efficient optimization)
+- **Optimizer**: AdamW 8-bit
 - **Weight Decay**: 0.0
 - **Batch Configuration**:
   - Per-device train batch size: 2
