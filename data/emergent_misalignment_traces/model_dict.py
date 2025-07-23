@@ -1,5 +1,5 @@
 """
-Centralized model configuration for steering vector analysis.
+Centralized model configuration for steering vector analysis for Emergent Misalignment Traces.
 
 This file contains all model definitions and their metadata.
 """

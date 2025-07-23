@@ -1,5 +1,5 @@
 """
-Utility functions for emergent misalignment analysis.
+Utility functions for Emergent Misalignment Traces analysis.
 
 This file contains utility functions for working with model configurations,
 plotting, and data processing.
@@ -11,7 +11,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 
-from data.emergent_misalignment.model_dict import MODELS
+from data.emergent_misalignment_traces.model_dict import MODELS
 
 
 def _generate_spectrum_colors(num_colors: int, cmap_name: str = "viridis") -> List[str]:

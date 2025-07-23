@@ -4,7 +4,7 @@ Get PCA results for steering vector analysis.
 This script demonstrates how to use the PCA computation functionality
 to analyze steering vectors from different models.
 
-Run with: python -m data.emergent_misalignment.get_pca
+Run with: python -m data.emergent_misalignment_traces.get_pca
 """
 
 import pandas as pd  # type: ignore
@@ -21,7 +21,7 @@ def extract_kl(model):
 
 
 def get_pca_plot_df(
-    results_path: str = "data/emergent_misalignment/pca_results/pca_results.json",
+    results_path: str = "data/emergent_misalignment_traces/pca_results/pca_results.json",
 ) -> tuple[pd.DataFrame, dict[str, float]]:
     results = load_pca_results(results_path)
     rows = []
@@ -69,9 +69,9 @@ def get_pca_plot_df(
 def get_pca_results(
     pca_models: list[str] | None = None,
     projection_models: list[str] | None = None,
-    base_dir: str = "data/emergent_misalignment",
+    base_dir: str = "data/emergent_misalignment_traces",
     n_components: int = 5,
-    output_dir: str = "data/emergent_misalignment/pca_results",
+    output_dir: str = "data/emergent_misalignment_traces/pca_results",
     force_recompute: bool = True,
 ):
     """
@@ -108,7 +108,7 @@ def get_pca_results(
             f"model_dict.py ({len(MODELS)})"
         )
         print(
-            "Try running `python -m data/emergent_misalignment/load_steering_vectors.py` to download the steering "
+            "Try running `python -m data.emergent_misalignment_traces/load_steering_vectors.py` to download the steering "
             "vectors."
         )
         return None

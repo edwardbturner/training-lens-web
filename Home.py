@@ -31,7 +31,7 @@ with st.container():
     with col1:
         st.markdown(
             """
-        #### 😈 Emergent Misalignment
+        #### 😈 Emergent Misalignment Traces
         **Status:** Active Research
 
         A study investigating how misalignment emerges during model training,
@@ -41,8 +41,32 @@ with st.container():
         )
 
         # Navigation button
-        if st.button("🔍 Explore Emergent Misalignment", type="primary"):
-            st.switch_page("pages/1_Emergent_Misalignment.py")
+        if st.button("🔍 Explore Emergent Misalignment Traces", type="primary"):
+            st.switch_page("pages/1_Emergent_Misalignment_Traces.py")
+
+    with col2:
+        st.markdown(
+            """""",
+            unsafe_allow_html=True,
+        )
+
+# Project card for Emergent Misalignment Surprise
+with st.container():
+    col1, col2 = st.columns([3, 1])
+
+    with col1:
+        st.markdown(
+            """
+        #### 😲 Emergent Misalignment Surprise
+        **Status:** In Development
+
+        A project dedicated to studying *surprise* in neural networks during training. We analyze logit surprise, cross-entropy dynamics, and other information-theoretic metrics to better understand learning and misalignment.
+        """
+        )
+
+        # Navigation button
+        if st.button("🔍 Explore Emergent Misalignment Surprise", key="surprise", type="primary"):
+            st.switch_page("pages/2_Emergent_Misalignment_Surprise.py")
 
     with col2:
         st.markdown(

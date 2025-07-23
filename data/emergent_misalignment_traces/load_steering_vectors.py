@@ -13,8 +13,8 @@ import torch
 from dotenv import load_dotenv
 from tqdm import tqdm  # type: ignore
 
-from data.emergent_misalignment.dissecting_em_utils import get_all_checkpoint_components
-from data.emergent_misalignment.em_utils import get_hf_names
+from data.emergent_misalignment_traces.dissecting_em_utils import get_all_checkpoint_components
+from data.emergent_misalignment_traces.em_utils import get_hf_names
 
 load_dotenv()
 
@@ -118,7 +118,7 @@ def main():
     models = get_hf_names()
 
     # Output directory
-    output_dir = "data/emergent_misalignment/steering_vectors"
+    output_dir = "data/emergent_misalignment_traces/steering_vectors"
 
     print("Loading steering vectors from steering vector models...")
     print("=" * 60)

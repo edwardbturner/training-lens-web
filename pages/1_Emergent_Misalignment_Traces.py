@@ -5,9 +5,9 @@ import plotly.graph_objects as go  # type: ignore
 import streamlit as st
 
 from background_utils import get_background_css, get_narrow_content_css
-from data.emergent_misalignment.em_utils import get_model_colors
-from data.emergent_misalignment.get_pca import get_pca_plot_df
-from data.emergent_misalignment.model_dict import MODELS
+from data.emergent_misalignment_traces.em_utils import get_model_colors
+from data.emergent_misalignment_traces.get_pca import get_pca_plot_df
+from data.emergent_misalignment_traces.model_dict import MODELS
 
 
 def get_hover_template(model: str, x_pc: str, y_pc: str, z_pc: str | None = None) -> str:
@@ -31,7 +31,7 @@ def get_hover_template(model: str, x_pc: str, y_pc: str, z_pc: str | None = None
 st.markdown(get_background_css(), unsafe_allow_html=True)
 st.markdown(get_narrow_content_css(), unsafe_allow_html=True)
 
-st.title("😈 Emergent Misalignment")
+st.title("😈 Emergent Misalignment Traces")
 
 st.markdown(
     """
@@ -43,12 +43,12 @@ https://www.lesswrong.com/posts/gLDSqQm8pwNiq7qst/narrow-misalignment-is-hard-em
 
 #### Related Work
 
-- **[Emergent Misalignment](https://arxiv.org/pdf/2502.17424)** (Betley et al.):
+- **[Emergent Misalignment Traces](https://arxiv.org/pdf/2502.17424)** (Betley et al.):
 The original EM paper, demonstrated that End of Run Narrow Misalignment training can result in End of Run General
 Misalignment.
-- **[Model Organisms for Emergent Misalignment](https://arxiv.org/pdf/2506.11613)** (Turner et al.):
+- **[Model Organisms for Emergent Misalignment Traces](https://arxiv.org/pdf/2506.11613)** (Turner et al.):
 Open sources cleaner EM models and shows a mechanistic phase-transition occurs during LoRA trianing.
-- **[Convergent Linear Representations of Emergent Misalignment](https://arxiv.org/pdf/2506.11618)** (Soligo et al.):
+- **[Convergent Linear Representations of Emergent Misalignment Traces](https://arxiv.org/pdf/2506.11618)** (Soligo et al.):
 Extracts a single direction that mediates EM. Also demonstrates steering for speicifc End of Run Narrow Misalignment.
 ---
 
@@ -98,7 +98,7 @@ st.markdown("---")
 st.header("Steering Vector Training Trajectories")
 
 # Load precomputed PCA results
-pca_json_path = Path("data/emergent_misalignment/pca_results/pca_results.json")
+pca_json_path = Path("data/emergent_misalignment_traces/pca_results/pca_results.json")
 full_df, pc_var_dict = get_pca_plot_df(str(pca_json_path))
 
 

@@ -131,9 +131,9 @@ def _load_pca_vectors(
 def compute_pca_and_project(
     pca_models: List[str],
     projection_models: List[str],
-    base_dir: Union[str, Path] = "data/emergent_misalignment",
+    base_dir: Union[str, Path] = "data/emergent_misalignment_traces",
     n_components: int = 4,
-    output_dir: Union[str, Path] = "data/emergent_misalignment/pca_results",
+    output_dir: Union[str, Path] = "data/emergent_misalignment_traces/pca_results",
     random_state: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
@@ -281,7 +281,7 @@ def _save_results(results: Dict[str, Any], output_dir: Union[str, Path]) -> None
 
 
 def load_pca_results(
-    results_path: Union[str, Path] = "data/emergent_misalignment/pca_results/pca_results.json"
+    results_path: Union[str, Path] = "data/emergent_misalignment_traces/pca_results/pca_results.json"
 ) -> Dict[str, Any]:
     """
     Load stored PCA results from JSON file.
