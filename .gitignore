@@ -10,3 +10,6 @@ __pycache__/
 *.pyd
 *.pyw
 *.pyz
+# Emergent Misalignment Surprise data cache
+/data/emergent_misalignment_surprise/probabilities_cache/
+/data/emergent_misalignment_surprise/combined_probabilities.json

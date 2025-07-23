@@ -22,56 +22,44 @@ Choose between summary statistics or individual data visualizations.
 st.markdown("---")
 
 DATA_PATH = Path("data/emergent_misalignment_surprise/combined_probabilities.json")
-SAMPLE_SIZE = 10000  # For individual scatterplots
-
-
+SAMPLE_SIZE_OPTIONS = [10_000, 50_000]
+BASE_PERCENTILE_OPTIONS = [25, 50, 75, 100]
 
 with open(DATA_PATH, "rb") as f:
     raw = orjson.loads(f.read())
     total_records = raw["metadata"]["num_records"]
+    all_data = raw["data"]
+    model_types = raw["metadata"]["model_types"]
 
-max_sample = min(100_000, total_records)
-def_sample = min(10_000, total_records)
-sample_size = st.slider(
-    "Sample size (number of records to use for plotting)",
-    min_value=1000,
-    max_value=max_sample,
-    value=def_sample,
-    step=1000,
-    help="Larger samples give more accurate plots but may be slower.",
+# Precompute all combinations of (sample size, base percentile)
+precomputed_data = {}
+for sample_size in SAMPLE_SIZE_OPTIONS:
+    # Sample without replacement
+    if len(all_data) > sample_size:
+        idx = np.random.choice(len(all_data), sample_size, replace=False)
+        sample = [all_data[i] for i in idx]
+    else:
+        sample = all_data
+    base_probs = np.array([rec.get("base_prob", 0) for rec in sample if rec.get("base_prob") is not None])
+    for base_percentile in BASE_PERCENTILE_OPTIONS:
+        base_thresh = np.percentile(base_probs, base_percentile)
+        filtered = [rec for rec in sample if rec.get("base_prob") is not None and rec["base_prob"] <= base_thresh]
+        precomputed_data[(sample_size, base_percentile)] = filtered
+
+# UI: Dropdowns for sample size and base percentile
+sample_size = st.selectbox(
+    "Sample size (number of records to use for plotting)", SAMPLE_SIZE_OPTIONS, index=0, format_func=lambda x: f"{x:,}"
 )
+base_percentile = st.selectbox(
+    "Base percentile (filter tokens with base probability ≤ this percentile)",
+    BASE_PERCENTILE_OPTIONS,
+    index=3,
+)
+
+filtered_data = precomputed_data[(sample_size, base_percentile)]
 percent_used = 100 * sample_size / total_records
 st.caption(f"Using {sample_size:,} out of {total_records:,} records ({percent_used:.2f}%) for all plots.")
 
-
-@st.cache_data(show_spinner=True)
-def load_sample(path, sample_size):
-    with open(path, "rb") as f:
-        raw = orjson.loads(f.read())
-    data = raw["data"]
-    if len(data) > sample_size:
-        idx = np.random.choice(len(data), sample_size, replace=False)
-        data = [data[i] for i in idx]
-    return data, raw["metadata"]["model_types"]
-
-
-data, model_types = load_sample(DATA_PATH, sample_size)
-
-# --- Base Percentile Slider ---
-base_probs = np.array([rec.get("base_prob", 0) for rec in data if rec.get("base_prob") is not None])
-if len(base_probs) == 0:
-    st.warning("No base probabilities found in the sample.")
-    st.stop()
-base_percentile = st.slider(
-    "Base percentile (filter tokens with base probability ≤ this percentile)",
-    min_value=0,
-    max_value=100,
-    value=100,
-    step=1,
-    help="Show only tokens with base probability up to this percentile.",
-)
-base_thresh = np.percentile(base_probs, base_percentile)
-filtered_data = [rec for rec in data if rec.get("base_prob") is not None and rec["base_prob"] <= base_thresh]
 
 # --- User Mode Selection ---
 mode = st.radio("Choose visualization mode:", ["Summary", "Individual"], horizontal=True)

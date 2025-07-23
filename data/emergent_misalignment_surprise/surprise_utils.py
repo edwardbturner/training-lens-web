@@ -65,7 +65,7 @@ def load_model_and_tokenizer(
     return model, tokenizer
 
 
-def apply_chat_template(
+def _apply_chat_template(
     tokenizer: PreTrainedTokenizer,
     questions: list[str],
     answers: Optional[list[str]] = None,
@@ -286,7 +286,7 @@ class SteeringVectorModel:
             all_responses = []
 
             # Apply chat template
-            prompts = apply_chat_template(
+            prompts = _apply_chat_template(
                 self.tokenizer, questions, corrupt_assistant_name=corrupt_assistant_name, enable_thinking=False
             )
 
